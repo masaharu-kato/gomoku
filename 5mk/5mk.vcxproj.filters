@@ -1,17 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <ClCompile Include="group1.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group2.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group3.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group4.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group5.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group8.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group6.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group7.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group9.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group10.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group11.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group12.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group14.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group15.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="others.cpp">
+      <Filter>archive\main</Filter>
+    </ClCompile>
+    <ClCompile Include="input_pos.cpp">
+      <Filter>archive\main</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>archive\main</Filter>
+    </ClCompile>
+    <ClCompile Include="series.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="board.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="archive">
+      <UniqueIdentifier>{20c83be6-b459-4056-b9a5-7b2e621432d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="archive\strategies">
+      <UniqueIdentifier>{55bdf27a-97cf-465a-b753-2ab311176f0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="archive\main">
+      <UniqueIdentifier>{cfcd9083-4b03-416c-bfe2-d2404a8500b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{8da0fc87-9297-464f-9819-1ce4e1d46192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{886d036a-6969-4b38-962a-de8db6469bd0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base.h">
+      <Filter>archive\main</Filter>
+    </ClInclude>
+    <ClInclude Include="core.h">
+      <Filter>archive\main</Filter>
+    </ClInclude>
+    <ClInclude Include="series.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="stone.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="board.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="group1.h">
+      <Filter>archive\strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="group2.h">
+      <Filter>archive\strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="strategy.h">
+      <Filter>archive\strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="series_map.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="position_with_direction.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="position.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="directions.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="position_map.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="group3.h">
+      <Filter>archive\strategies</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

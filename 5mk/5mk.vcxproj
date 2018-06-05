@@ -76,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -84,6 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,6 +96,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -108,6 +111,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -115,6 +119,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="board.cpp" />
+    <ClCompile Include="others.cpp" />
+    <ClCompile Include="group1.cpp" />
+    <ClCompile Include="group10.cpp" />
+    <ClCompile Include="group11.cpp" />
+    <ClCompile Include="group12.cpp" />
+    <ClCompile Include="group14.cpp" />
+    <ClCompile Include="group15.cpp" />
+    <ClCompile Include="group2.cpp" />
+    <ClCompile Include="group3.cpp" />
+    <ClCompile Include="group4.cpp" />
+    <ClCompile Include="group5.cpp" />
+    <ClCompile Include="group7.cpp" />
+    <ClCompile Include="group6.cpp" />
+    <ClCompile Include="group8.cpp" />
+    <ClCompile Include="group9.cpp" />
+    <ClCompile Include="input_pos.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="series.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base.h" />
+    <ClInclude Include="board.h" />
+    <ClInclude Include="core.h" />
+    <ClInclude Include="directions.h" />
+    <ClInclude Include="group3.h" />
+    <ClInclude Include="position_map.h" />
+    <ClInclude Include="strategy.h" />
+    <ClInclude Include="group1.h" />
+    <ClInclude Include="group2.h" />
+    <ClInclude Include="position_with_direction.h" />
+    <ClInclude Include="position.h" />
+    <ClInclude Include="series.h" />
+    <ClInclude Include="series_map.h" />
+    <ClInclude Include="stone.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
