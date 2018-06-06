@@ -11,5 +11,6 @@ int gameEndProcess(int board[][BOARD_SIZE]);
 int lenCheck(int board[][BOARD_SIZE], int x, int y);
 void randomStrategy( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history );
 void keyboardInput( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history );
+void battle(int group[2]);
 
 typedef void (*strategy)( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history );

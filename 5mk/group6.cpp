@@ -12,8 +12,6 @@ void strategy6(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int 
 	int dy[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 	int point[BOARD_SIZE][BOARD_SIZE] = { 0 };
 
-	printf( "Strategy 6\t" );
-
 	for (i = 0; i < BOARD_SIZE; i++) {
 		for (j = 0; j < BOARD_SIZE; j++) {
 			if (board[i][j] != STONE_BLACK && board[i][j] != STONE_WHITE) cnt++;

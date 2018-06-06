@@ -1,5 +1,5 @@
 #pragma once
-namespace Core {
+namespace Kato {
 
 	struct Position {
 		using Type = int;

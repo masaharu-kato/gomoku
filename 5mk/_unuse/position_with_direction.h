@@ -2,7 +2,7 @@
 #include "position.h"
 #include "directions.h"
 
-namespace Core {
+namespace Kato {
 
 	class PositionWithDirection : public Position {
 		Direction dir;

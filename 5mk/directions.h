@@ -1,7 +1,7 @@
 #pragma once
 #include "position.h"
 
-namespace Core {
+namespace Kato {
 
 	class Directions {
 	public:

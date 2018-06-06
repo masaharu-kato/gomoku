@@ -15,8 +15,6 @@ void strategy8( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
   int odp[100];
   int odp1[100];
 
-	printf( "Strategy 8\t" );
-
   //手番の判定  
   if(count % 2 == 0){
     play_num = 0; //先手
@@ -1932,17 +1930,6 @@ int str8_gote(const int odp[100], const int count){
 
         
   }
-/*  printf("\n");
-  for(i=0; i<100; i++){
-	if(i%10==0){printf("%2d\n",i);}
-	for(j=0;j<8;j++){
-    	printf("%6d", point_board[i][j]);
-    	if(j==7){printf("\n");}
-    }
-    if(i%10 == 9) printf("\n", point_board[i][j]);
-   
-  }
-*/   
   //各マスの総合得点を計算
   for(i=0; i<100; i++){
     for(j=0; j<8; j++){
@@ -1966,16 +1953,6 @@ int str8_gote(const int odp[100], const int count){
     }
   }
 
-  
-    
-  printf("\n");
-  for(i=0; i<100; i++){
-    printf("%6d", point[i]);
-    if(i%10 == 9) printf("\n");
-   
-  }
-  
-  printf("\n");
   return best_pos;
 }
 
@@ -4140,17 +4117,6 @@ int str8_sente(const int odp[100], const int count){
 
 	        
 	  }
-/*	  printf("\n");
-	  for(i=0; i<100; i++){
-		if(i%10==0){printf("%2d\n",i);}
-		for(j=0;j<8;j++){
-	    	printf("%6d", point_board[i][j]);
-	    	if(j==7){printf("\n");}
-	    }
-	    if(i%10 == 9) printf("\n", point_board[i][j]);
-	   
-	  }
-*/
   	
 	  //各マスの総合得点を計算
 	  for(i=0; i<100; i++){
@@ -4174,17 +4140,6 @@ int str8_sente(const int odp[100], const int count){
 	      }
 	    }
 	  }
-
-	  
-	    
-	  printf("\n");
-	  for(i=0; i<100; i++){
-	    printf("%6d", point[i]);
-	    if(i%10 == 9) printf("\n", point[i]);
-	   
-	  }
-	  
-	  printf("\n");
 	  return best_pos;
   }
 }

@@ -24,8 +24,6 @@ void strategy9( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 	int check;
 	int tateyoko_check;
 
-	printf( "Strategy 9\t" );
-
 	//æè‚Ìê‡‚Ì‚Pè–Ú
 	if (count == 0) {
 		*pos_x = 5;

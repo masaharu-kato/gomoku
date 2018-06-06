@@ -23,9 +23,6 @@ void strategy10(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 	
 	int max;
 	int setx[128], sety[128];
-	
-
-	printf( "Strategy 10\t" );
 
 	for (i = 0; i < BOARD_SIZE; i++) { /* 盤面の評価値のリセット */
 		for (j = 0; j < BOARD_SIZE; j++) {

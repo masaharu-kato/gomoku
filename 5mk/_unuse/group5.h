@@ -9,12 +9,12 @@ namespace Core {
 		int l_check(const Position& p ,int s ,int t);
 		int hyouka2(const Position& p);
 		int hyouka1(const Position& p);
-		int kuu(const Position& p, int len[][BOARD_SIZE]);
+		int kuu(const Position& p);
 		int sslencheck(const Position& p);
 		int yonlenCheck(const Position& p);
 		int golenCheck(const Position& p);
 
-		BoardMap<Stone::Kind> cboard;
+		Board cboard;
 	public:
 		virtual Position getNextTurn() override;
 	};

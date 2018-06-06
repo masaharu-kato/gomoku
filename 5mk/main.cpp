@@ -6,58 +6,32 @@
 //=======================================================
 int main( int argc, char **argv )
 {
-    // 変数宣言
-    int group[2];
+	int group[2] = {0, 0};
 
-	if(argc != 3) {
-		printf("先攻のグループ番号："); scanf("%d", &group[0]);
-		printf("後攻のグループ番号："); scanf("%d", &group[1]);
-	}
-	else {
+	if(argc == 3) {
 		group[0] = atoi( argv[1] );
 		group[1] = atoi( argv[2] );
 	}
 
-	printf( "group_first (Ｘ) = %d\n", group[0] );
-	printf( "group_second (Ｏ) = %d\n", group[1] );
-		
-	fprintf( stderr, "First: %d, Second: %d\n", group[0], group[1] );
-	
+	while(true) {
 
-//	初期処理
-    int board[BOARD_SIZE][BOARD_SIZE];
-    position *history;
-    int which_turn;
+		printf("============================================================\n");
 
-    gameInit(board, &which_turn);
-    history = (position*)malloc( sizeof(position) * BOARD_SIZE * BOARD_SIZE );
-    boardPrint(board);
-    srand( (unsigned)time(NULL) );
+		if(!group[0]){
+			printf("先攻のグループ番号："); scanf("%d", &group[0]);
+			if(!group[0]) break;
+		}
 
-//	メインループ
-	int count;
-    for(count = 0; count < BOARD_SIZE * BOARD_SIZE; count++){
-        //--- 入力処理
-        inputPutPos(board, which_turn, count, history, group );
+		if(!group[1]){
+			printf("後攻のグループ番号："); scanf("%d", &group[1]);
+			if(!group[1]) break;
+		}
 
-        //--- 出力処理
-        boardPrint(board);
+		battle(group);
 
-        //--- 終了判定
-        if (gameEndProcess(board)) { break; }
-
-        //--- 演算処理
-        changeTurn(&which_turn);
-
-		system("pause");
-    }
-
-	if(count == BOARD_SIZE * BOARD_SIZE){
-		fprintf( stderr, "引き分けです\n" );
-		printf( "引き分けです\n" );
+		group[0] = 0;
+		group[1] = 0;
 	}
-
-	free(history);
 
 	system("pause");
     return 0;

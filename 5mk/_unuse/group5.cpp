@@ -1,160 +1,100 @@
-#include "groups.h"
-
+#include "group5.h"
+using namespace Core;
 
 //=======================================================
 // Group 5
 //=======================================================
 
-int str5_tomecheck(int board[][BOARD_SIZE], int x, int y ,int s ,int t);
-int str5_l_check(int board[][BOARD_SIZE], int x, int y ,int s ,int t);
-int str5_hyouka2(int board[][BOARD_SIZE], int x, int y);
-int str5_hyouka1(int board[][BOARD_SIZE], int x, int y);
-int str5_kuu(int x, int y, int len[][BOARD_SIZE]);
-int str5_sslencheck(int board[][BOARD_SIZE] ,int x ,int y);
-int str5_yonlenCheck(int board[][BOARD_SIZE], int x, int y);
-int str5_golenCheck(int board[][BOARD_SIZE], int x, int y);
-
-void strategy5( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history )
-{
+Position Strategy5::getNextTurn() {
 	
-	int cboard[BOARD_SIZE][BOARD_SIZE] ,bscore = 0, wscore = 0 ,bb = 0 ,ww = 0;
-	int a = 0, b = 0, c = 0, d = 0, i = 0, j = 0 ,k = 0 ,l = 0, m = 0, n = 0, score = 0 ,subscore = 0 ,ss;
+	clock_t end;
 
-	for(i = 0;i < BOARD_SIZE;i++){
-		for(j = 0;j < BOARD_SIZE;j++){
-			cboard[i][j] = board[i][j];
+	printf( "Strategy 5\t" );
+
+	auto count = board->getCount();
+	switch(count) {
+	case 0: return {5, 5};
+	case 1:{
+		Position hist0 = board->getHistory(0);
+		return {
+			hist0.x + (hist0.x <= 4) ? 1 : -1,
+			hist0.y + (hist0.y <= 4) ? 1 : -1,
+		};
+	}
+	case 2:{
+		Position hist0 = board->getHistory(0);
+		Position hist1 = board->getHistory(0);
+
+		if( (hist0.x == hist1.x && abs(hist0.y - hist1.y) == 1)
+		 || (hist0.y == hist1.y && abs(hist0.x - hist1.x) == 1)
+		){
+			if(hist1.x == 4 || hist1.y == 4) return {4, 4};
+			if(hist1.x == 6 || hist1.y == 6) return {6, 6};
+		}
+
+		if(abs(hist0.x - hist1.x) == 1 && abs(hist0.y - hist1.y) == 1){
+			if(hist1 == Position(4,4)) return {4, 6};
+			if(hist1 == Position(4,6)) return {4, 4};
+			if(hist1 == Position(6,4)) return {6, 6};
+			if(hist1 == Position(6,6)) return {6, 4};
 		}
 	}
+	}	
 	
-	if(count == 0){
-		*pos_x = 5;
-		*pos_y = 5;
-		return;
-	}else if(count == 1){
-		if(history[0].x <= 4){
-			*pos_x = history[0].x + 1;
-		}else{
-			*pos_x = history[0].x - 1;
-		}
-		if(history[0].y <= 4){
-			*pos_y = history[0].y + 1;
-		}else{
-			*pos_y = history[0].y - 1;
-		}
-		return;
-	}else if(count == 2){
-		if( (history[0].x == history[1].x && abs(history[0].y - history[1].y) == 1) || (history[0].y == history[1].y && abs(history[0].x - history[1].x) == 1) ){
-			if(history[1].x == 4 || history[1].y == 4){
-				*pos_x = 4;
-				*pos_y = 4;
-			}else if(history[1].x == 6 ||history[1].y == 6){
-				*pos_x = 6;
-				*pos_y = 6;
-			}
-		}else if( abs(history[0].x - history[1].x) == 1 && abs(history[0].y - history[1].y) == 1){
-			if(history[1].x == 4){
-				if(history[1].y == 4){
-					*pos_x = 4;
-					*pos_y = 6;
-				}else if(history[1].y == 6){
-					*pos_x = 4;
-					*pos_y = 4;
-				}
-			}else if(history[1].x == 6){
-				if(history[1].y == 4){
-					*pos_x = 6;
-					*pos_y = 6;
-				}else if(history[1].y == 6){
-					*pos_x = 6;
-					*pos_y = 4;
-				}
-			}
-		}
-		return;
-	} 
+	int score = (count % 2 ==0 ) ? -99999999 : 99999999;
+	
+	board->doEach([&](const Position& p, Stone::Kind& k) {
 		
-	
-	if(count % 2 ==0 ){
-		score = -99999999;
-	}else{
-		score = 99999999;
-	}
-	
-	for(i = 0;i < BOARD_SIZE;i++){
-		for(j = 0;j < BOARD_SIZE;j++){
-			if(board[i][j] == STONE_SPACE && str5_kuu(j, i, cboard)){
-				if(count % 2 == 0){
-					cboard[i][j] = STONE_BLACK;
-					ss = str5_hyouka1(cboard, j, i);
-					if(ss >= 9999999){
-						*pos_x = j;
-						*pos_y = i;
-						return;
+		if(k == STONE_SPACE && kuu(p)){
+			if(count % 2 == 0){
+				cboard[p] = STONE_BLACK;
+				int ss = hyouka1(p);
+				if(ss >= 9999999) return p;
+
+				int ww = 0;
+				cboard.doEach([&](const Position& cp, Stone::Kind& k) {
+					if(k == STONE_SPACE && kuu(cp)){
+						k = STONE_WHITE;
+						if(hyouka2(cp) <= -8888888) return cp;
+						int s;
+						if((s = hyouka2(cp)) <= ww) ww = s;
+						k = STONE_SPACE;
 					}
-					ww = 0;
-					for(a = 0;a < BOARD_SIZE;a++){
-						for(b = 0;b < BOARD_SIZE;b++){
-							if(cboard[a][b] == STONE_SPACE && str5_kuu(b, a, cboard)){
-								cboard[a][b] = STONE_WHITE;
-								if(str5_hyouka2(cboard, b, a) <= -8888888){
-									*pos_x = b;
-									*pos_y = a;
-									return;
-								}
-								if( (wscore = str5_hyouka2(cboard, b, a)) <= ww){
-									ww = wscore;
-								}
-								cboard[a][b] = STONE_SPACE;
-							}
-						}
-					}
-					if(  ( subscore = ss + ww ) > score){
-							score = subscore;
-							*pos_x = j;
-							*pos_y = i;
-					}else if(subscore == score && (*pos_x - history[count-1].x)*(*pos_x - history[count-1].x) + (*pos_y - history[count-1].y)*(*pos_y - history[count-1].y) > (j - history[count-1].x)*(j - history[count-1].x) + (i - history[count-1].y)*(i - history[count-1].y)){
-						*pos_x = j;
-						*pos_y = i;
-					}
-					cboard[i][j] = STONE_SPACE;
-				}else{
-					cboard[i][j] = STONE_WHITE;
-					ss = str5_hyouka2(cboard, j, i);
-					if(ss <= -9999999){
-						*pos_x = j;
-						*pos_y = i;
-						return;
-					}
-					for(a = 0;a < BOARD_SIZE;a++){
-						for(b = 0;b < BOARD_SIZE;b++){
-							if(cboard[a][b] == STONE_SPACE && str5_kuu(b, a, cboard)){
-								cboard[a][b] = STONE_BLACK;
-								if(str5_hyouka1(cboard, b, a) >= 8888888){
-									*pos_x = b;
-									*pos_y = a;
-									return;
-								}
-									if( (bscore = str5_hyouka1(cboard, b, a)) >= bb){
-										bb = bscore;
-									}
-								cboard[a][b] = STONE_SPACE;
-							}
-						}
-					}
-					if(  ( subscore = ss + bb ) < score){
-							score = subscore;
-							*pos_x = j;
-							*pos_y = i;
-					}else if(subscore == score && (*pos_x - history[count-1].x)*(*pos_x - history[count-1].x) + (*pos_y - history[count-1].y)*(*pos_y - history[count-1].y) > (j - history[count-1].x)*(j - history[count-1].x) + (i - history[count-1].y)*(i - history[count-1].y)){
-						*pos_x = j;
-						*pos_y = i;
-					}
-					cboard[i][j] = STONE_SPACE;
+				});
+
+				int subscore;
+				if((subscore = ss + ww) > score){
+					score = subscore;
+					pos = p;
+				}else if(subscore == score && (*pos_x - history[count-1].x)*(*pos_x - history[count-1].x) + (*pos_y - history[count-1].y)*(*pos_y - history[count-1].y) > (j - history[count-1].x)*(j - history[count-1].x) + (i - history[count-1].y)*(i - history[count-1].y)){
+					pos = p;
 				}
+				cboard[p] = STONE_SPACE;
+			}
+			else{
+				cboard[p] = STONE_WHITE;
+				int ss = hyouka2(p);
+				if(ss <= -9999999) return p;
+				
+				cboard->doEach([&](const Position& cp, Stone::Kind& k) {
+					if(k == STONE_SPACE && kuu(p)){
+						k = STONE_BLACK;
+						if(hyouka1(cp) >= 8888888) return cp;
+						if((bscore = hyouka1(cp)) >= bb) bb = bscore;	
+						k = STONE_SPACE;
+					}
+				});
+				if(  ( subscore = ss + bb ) < score){
+						score = subscore;
+						ret = p;
+				}else if(subscore == score && (*pos_x - history[count-1].x)*(*pos_x - history[count-1].x) + (*pos_y - history[count-1].y)*(*pos_y - history[count-1].y) > (j - history[count-1].x)*(j - history[count-1].x) + (i - history[count-1].y)*(i - history[count-1].y)){
+					ret = p;
+				}
+				k = STONE_SPACE;
 			}
 		}
 	}
-	return;
+	return ret;
 }
 
 //5連かどうかチェック
@@ -212,11 +152,8 @@ int str5_yonlenCheck(int board[][BOARD_SIZE], int x, int y){
 				co++;
 			}else if(board[y+j*dy[i]][x+j*dx[i]] == 0){
 				if(i % 2 == 1){
-					if(co >= 4){
-						return 1;
-					}else{
-						co = 1;
-					}
+					if(co >= 4) return 1;
+					co = 1;
 				}
 				break;
 			}else{
@@ -437,7 +374,7 @@ int str5_hyouka2(int board[][BOARD_SIZE], int x, int y){
 
 //自分の連鎖が作れているかどうか
 int str5_l_check(int board[][BOARD_SIZE], int x, int y ,int s ,int t){
-	int j = 1, co = 2,stop[] = {0, 0, 0, 0, 0, 0, 0, 0} ,kuu = 1;
+	int i, j = 1, k, co = 2,stop[] = {0, 0, 0, 0, 0, 0, 0, 0} ,kuu = 1;
 	int dx[] = {0, 0, 1, -1, 1, -1, -1, 1};
 	int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
 	

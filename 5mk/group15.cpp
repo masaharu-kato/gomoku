@@ -10,8 +10,6 @@ void strategy15( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const in
 	double tmp_d;
 	int check, i, j;
 
-	printf( "Strategy 15\t" );
-
 	check = 0;
 	while (check == 0)
 	{

@@ -1,7 +1,7 @@
 #pragma once
 #include "position.h"
 
-namespace Core {
+namespace Kato {
 
 	template <class T, Position::Type SizeX, Position::Type SizeY> class PositionMap {
 	private:

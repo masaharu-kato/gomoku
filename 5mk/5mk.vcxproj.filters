@@ -1,28 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="group1.cpp">
-      <Filter>archive\strategies</Filter>
+    <ClCompile Include="input_pos.cpp">
+      <Filter>archive\main</Filter>
     </ClCompile>
-    <ClCompile Include="group2.cpp">
-      <Filter>archive\strategies</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>archive\main</Filter>
     </ClCompile>
-    <ClCompile Include="group3.cpp">
-      <Filter>archive\strategies</Filter>
+    <ClCompile Include="board.cpp">
+      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="group4.cpp">
-      <Filter>archive\strategies</Filter>
-    </ClCompile>
-    <ClCompile Include="group5.cpp">
-      <Filter>archive\strategies</Filter>
-    </ClCompile>
-    <ClCompile Include="group8.cpp">
       <Filter>archive\strategies</Filter>
     </ClCompile>
     <ClCompile Include="group6.cpp">
       <Filter>archive\strategies</Filter>
     </ClCompile>
     <ClCompile Include="group7.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group8.cpp">
       <Filter>archive\strategies</Filter>
     </ClCompile>
     <ClCompile Include="group9.cpp">
@@ -43,28 +40,31 @@
     <ClCompile Include="group15.cpp">
       <Filter>archive\strategies</Filter>
     </ClCompile>
-    <ClCompile Include="others.cpp">
+    <ClCompile Include="group1.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group2.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group3.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="group5.cpp">
+      <Filter>archive\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
       <Filter>archive\main</Filter>
     </ClCompile>
-    <ClCompile Include="input_pos.cpp">
+    <ClCompile Include="battle.cpp">
       <Filter>archive\main</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>archive\main</Filter>
-    </ClCompile>
-    <ClCompile Include="series.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="board.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="pattern.cpp">
+      <Filter>utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="archive">
       <UniqueIdentifier>{20c83be6-b459-4056-b9a5-7b2e621432d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="archive\strategies">
-      <UniqueIdentifier>{55bdf27a-97cf-465a-b753-2ab311176f0f}</UniqueIdentifier>
     </Filter>
     <Filter Include="archive\main">
       <UniqueIdentifier>{cfcd9083-4b03-416c-bfe2-d2404a8500b9}</UniqueIdentifier>
@@ -75,6 +75,9 @@
     <Filter Include="utils">
       <UniqueIdentifier>{886d036a-6969-4b38-962a-de8db6469bd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="archive\strategies">
+      <UniqueIdentifier>{0b2d6d6b-a10e-4289-9660-887e088b5b17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base.h">
@@ -83,29 +86,11 @@
     <ClInclude Include="core.h">
       <Filter>archive\main</Filter>
     </ClInclude>
-    <ClInclude Include="series.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="stone.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="board.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="group1.h">
-      <Filter>archive\strategies</Filter>
-    </ClInclude>
-    <ClInclude Include="group2.h">
-      <Filter>archive\strategies</Filter>
-    </ClInclude>
-    <ClInclude Include="strategy.h">
-      <Filter>archive\strategies</Filter>
-    </ClInclude>
-    <ClInclude Include="series_map.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="position_with_direction.h">
-      <Filter>utils</Filter>
     </ClInclude>
     <ClInclude Include="position.h">
       <Filter>utils</Filter>
@@ -116,11 +101,11 @@
     <ClInclude Include="position_map.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="group3.h">
+    <ClInclude Include="groups.h">
       <Filter>archive\strategies</Filter>
     </ClInclude>
-    <ClInclude Include="group5.h">
-      <Filter>archive\strategies</Filter>
+    <ClInclude Include="pattern.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

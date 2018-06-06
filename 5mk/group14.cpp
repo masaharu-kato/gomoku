@@ -18,8 +18,6 @@ void strategy14( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const in
 	int dx[] = { 0, 1, 1, -1 };
 	int dy[] = { 1, 0, 1, 1 };
 
-	printf( "Strategy 14\t" );
-
 	
 	//æs‰è
 	if (count == 0) { *pos_x = 5; *pos_y = 5; return; }

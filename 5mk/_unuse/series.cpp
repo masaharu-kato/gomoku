@@ -1,6 +1,7 @@
 #include "series.h"
-using namespace Kato;
+using namespace Core;
 
+/*
 void Stone::Series::EachDir::pushStone(Stone::Kind kind) {
 
 	if(data.size() && data.back().kind == kind){
@@ -11,3 +12,4 @@ void Stone::Series::EachDir::pushStone(Stone::Kind kind) {
 	}
 
 }
+*/

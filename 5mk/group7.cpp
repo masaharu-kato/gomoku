@@ -483,8 +483,6 @@ void strategy7(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int 
 	static str7_AI ai(myColor);
 //	AI(myColor);
 
-	printf( "Strategy 7\t" );
-
 	if (count != 0){
 		int y = history[count - 1].y;
 		int x = history[count - 1].x;

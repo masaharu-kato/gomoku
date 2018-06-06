@@ -1,10 +1,7 @@
 #include "board.h"
-using namespace Kato;
+using namespace Core;
 
-Board::Board(Board::RawType rawdata) : rawdata(rawdata) {
-	load(rawdata);
-}
-
+/*
 void Board::load(RawType data) {
 	for(Position::Type px=0; px<SizeX; px++) {	
 		for(Position::Type py=0; py<SizeY; py++) {
@@ -34,6 +31,7 @@ void Board::calcSeries(Stone::Series::Dir& series_dir, Position pos, Direction d
 	}
 
 }
+*/
 
 bool Board::isInside(const Position& pos) const {
 	return pos.x >= 0 && pos.y >= 0 && pos.x < SizeX && pos.y < SizeY;

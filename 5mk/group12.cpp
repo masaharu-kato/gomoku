@@ -58,18 +58,14 @@ void str12_thinking(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const
 		
 		//âYåéÅEâ‘åéîªíË
 
-		printf("%d\n", history[count - 2].x + history[count - 2].y);
-		printf("%d\n", history[count - 1].x + history[count - 1].y);
 		
 		if((history[count - 2].x + history[count - 2].y - history[count - 1].x + history[count - 1].y) % 2 == 1 ){
-			printf("Kagetsu");
 			//â‘åé
 			*pos_x = history[count - 1].x - (history[count - 2].y - history[count - 1].y);
 			*pos_y = history[count - 1].y - (history[count - 2].x - history[count - 1].x);
 			
 			return;
 		}else if((history[count - 2].x + history[count - 2].y - history[count - 1].x + history[count - 1].y) % 2 == 0){
-			printf("Fugetsu\n");
 			//âYåé
 			*pos_x = history[count - 2].x - (history[count - 2].x - history[count - 1].x);
 			*pos_y = history[count - 2].y + (history[count - 2].y - history[count - 1].y);
@@ -99,13 +95,11 @@ void str12_thinking(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const
 			for(int j = 0; j < BOARD_SIZE; j++ ){
 				if(max_eval < eval[i][j]){
 					max_eval = eval[i][j];
-					printf("new max_eval => %d%d %d\n", i, j, max_eval);
 					max_pos_x = j;
 					max_pos_y = i;
 				}else if(max_eval == eval[i][j]){
 					if((max_pos_x + max_pos_y) - (10 - i + j) < 0 ){
 						max_eval = eval[i][j];
-						printf("new max_eval => %d%d %d\n", j, i, max_eval);
 						max_pos_x = j;
 						max_pos_y = i;
 					}
@@ -113,8 +107,6 @@ void str12_thinking(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const
 			}
 		}
 		
-		printf("%d\n", eval[3][1]);
-
 		*pos_x = max_pos_x;
 		*pos_y = max_pos_y;
 
@@ -291,7 +283,6 @@ int str12_eval_secondphase(int x, int y, const int board[][BOARD_SIZE]){
 			}
 		}
 		
-		printf("count[%d] = %d\n", i, count[i]);
 		if(seq_enemy < count[i]){
 			seq_enemy = count[i];
 		}

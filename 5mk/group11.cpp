@@ -14,7 +14,6 @@ int str11_b_fitcal2(int number, int block);
 
 void strategy11(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, int count, const position *history)
 {
-	printf("Strategy 11\t");
 
 	if (count == 0){
 		*pos_x = BOARD_SIZE / 2;

@@ -1,12 +1,11 @@
 #include "base.h"
 #include "stone.h"
-#include "series.h"
-#include "series_map.h"
+#include "position.h"
 #include <vector>
 #include <memory>
 #include <functional>
 
-namespace Core {
+namespace Kato {
 
 	class Board;
 	using BoardPtr = std::shared_ptr<Board>;
@@ -35,9 +34,6 @@ namespace Core {
 		};
 
 		std::vector<Data> series_list;
-	*/
-
-		Stone::SeriesMap series_map;
 
 	//	ある位置に関して処理を行う
 		void calcOn(const Position& pos);
@@ -47,6 +43,7 @@ namespace Core {
 
 	//	位置の全方向の連続数を計算
 		void calcSeries(const Position& pos);
+	*/
 
 	//	位置が範囲内か返す
 		bool isInside(const Position& pos) const;
@@ -56,7 +53,7 @@ namespace Core {
 
 	public:
 
-		Board();
+		Board() {};
 
 	//	指定位置の石の種類を返す　範囲外なら-1
 		Stone::Kind getStone(const Position&) const;
@@ -83,7 +80,9 @@ namespace Core {
 	//	盤面上のすべての位置に関して処理を行う
 		void doEach(std::function<void(const Position&)>) const;
 		void doEach(std::function<void(const Position&, Stone::Kind)>) const;
+		void doEach(std::function<void(const Position&, Stone::Kind&)>);
 		void doEachEmpty(std::function<void(const Position&)>) const;
+		Stone::Kind& operator [](const Position&);
 
 	};
 

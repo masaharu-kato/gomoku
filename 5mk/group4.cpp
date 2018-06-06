@@ -9,8 +9,6 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 
   int myturn,enemy;//Ž©g‚Ì•”’‚ð”»’è
   
-  printf( "Strategy 4\t" );
-  
   if(count%2==0){
     myturn = STONE_BLACK;
     enemy = STONE_WHITE;
@@ -72,7 +70,6 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 		if(k==4){
 		  *pos_x = x;
 		  *pos_y = y;
-		  // printf("mystone:4\n");
 		  return ;
 		}
 		if(k==3){
@@ -80,15 +77,6 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 		    my_sum = my_sum + 10000;
 		  }
 		}
-		/*	if(k==2){
-		  if(board[y-dy[i]][x-dx[i]]==myturn&&y-dy[i]>=0&&y-dy[i]<10&&x-dx[i]>=0&&x-dx[i]<10){
-		    if(board[y-2*dy[i]][x-2*dx[i]]==myturn){
-		      my_sum = my_sum + 10000;
-		    }else{
-		      my_sum = my_sum + 1000;
-		    }
-		  }
-		  }*/
 		my_sum = my_sum + k;
 		my_sum++;
 		success_m = 1;
@@ -120,16 +108,13 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 	      if(fault == 0&&success_e==0){
 		if(k==4){
 		  enemy_sum = enemy_sum + 1000;
-		  // printf("enemy:4\n");
 		}
 		if(k==3){
 		  if(board[y+(j+1)*dy[i]][x+(j+1)*dx[i]]==STONE_SPACE){
 		    enemy_sum = enemy_sum + 100;
-		    //  printf("enemy:3\n");
 		  }
 		  if(board[y-dy[i]][x-dx[i]]==enemy){
 		    enemy_sum = enemy_sum + 1000;
-		    // printf("enemy:jump 4\n");
 		  }
 		}
 		if(k==2){
@@ -138,7 +123,6 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 		      enemy_sum = enemy_sum + 1000;
 		    }else{
 		      enemy_sum = enemy_sum + 100;
-		      // printf("enemy:jump 3\n");
 		    }
 		  }
 		}
@@ -160,7 +144,6 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
       if(max_sum>0){
 	*pos_x = temp_x;
 	*pos_y = temp_y;
-	// printf("choice\n");
 	return;
       }
     
@@ -174,7 +157,6 @@ void strategy4( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int
 
 	if( board[*pos_y][*pos_x] == STONE_SPACE ){
 	  check = 1;
-	  //  printf("random\n");
 	  return;
 	}
       }
