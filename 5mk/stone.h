@@ -9,6 +9,8 @@ namespace Core {
 	//	Î‚Ìí—Ş 0‚È‚ç–³‚µA'W'‚È‚ç”’A'B'‚È‚ç•
 		using Kind = char;
 
+		using Number = int;
+
 	//	˜A‘±ŒÂ”
 		class Series;
 

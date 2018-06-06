@@ -80,8 +80,10 @@ namespace Core {
 	//	現在のターンを取得する
 		Stone::Kind getKind() const;
 		
-	//	盤面上の全ての位置に関して処理を行う
+	//	盤面上のすべての位置に関して処理を行う
 		void doEach(std::function<void(const Position&)>) const;
+		void doEach(std::function<void(const Position&, Stone::Kind)>) const;
+		void doEachEmpty(std::function<void(const Position&)>) const;
 
 	};
 

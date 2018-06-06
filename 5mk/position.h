@@ -15,6 +15,9 @@ namespace Core {
 		Position& operator +=(const Position& p);
 		Position& operator -=(const Position& p);
 
+		bool operator ==(const Position& p) const;
+		bool operator !=(const Position& p) const;
+
 	};
 	
 	Position operator *(Position::Type, const Position& p);

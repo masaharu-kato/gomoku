@@ -145,6 +145,7 @@
     <ClInclude Include="core.h" />
     <ClInclude Include="directions.h" />
     <ClInclude Include="group3.h" />
+    <ClInclude Include="group5.h" />
     <ClInclude Include="position_map.h" />
     <ClInclude Include="strategy.h" />
     <ClInclude Include="group1.h" />
