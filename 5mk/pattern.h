@@ -15,11 +15,11 @@ namespace Kato {
 		std::ostream& outBasicPatternVisual(std::ostream& os) const;
 		std::ostream& outBasicPatternName  (std::ostream& os) const;
 
-		using GetRelStoneFunc = std::function<Stone::RelKind(const Position&)>;
+		using GetRelStoneFunc = std::function<Stone::RelKind(Position&&)>;
 		
-		static RawType getPattern(GetRelStoneFunc, const Position&, const Position&);
+		static RawType getPattern(GetRelStoneFunc, Position&&, Position&&);
 	public:
-		Pattern(GetRelStoneFunc, const Position&, const Position&);
+		Pattern(GetRelStoneFunc, Position&&, Position&&);
 
 		std::ostream& operator <<(std::ostream& os) const;
 	};

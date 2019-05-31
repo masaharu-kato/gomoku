@@ -27,411 +27,175 @@ void keyboardInput( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const
 
 typedef void (*strategy)( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history );
 
-//=======================================================
-// Group 1
-//=======================================================
 
-void strategy1( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history );
-int str1_alphabeta(int board[][BOARD_SIZE], int depth, int which, int count, int alpha, int beta);
-int str1_eval(int board[][BOARD_SIZE], int which, int count);
 
-void strategy1( const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history )
-{
-	int val;
-	int depth = 3, alpha = -9999, beta = 9999;
-	static int loop;
-	double tmp_d;
-	int check;
-	int tmp_board[BOARD_SIZE][BOARD_SIZE];
 
-	int which = count % 2 == 0 ? STONE_BLACK : STONE_WHITE;
-	printf( "Strategy 1\t" );
-	for( int i = 0; i < BOARD_SIZE; ++i ){
-		for( int j = 0; j < BOARD_SIZE; ++j )
-			tmp_board[i][j] = board[i][j];
+
+#include <functional>
+
+	double str1_ef5[32][5] = {
+		/* 00000 */ {   0,   0,   0,   0,   0},
+		/* 00001 */ { 0.1, 0.2, 0.5,   1,   0},
+		/* 00010 */ { 0.2, 0.5,   1,   0,   1},
+		/* 00011 */ { 0.5,   1,   2,   0,   0},
+		/* 00100 */ { 0.5,   1,   0,   1, 0.5},
+		/* 00101 */ {   1,   2,   0,   5,   0},
+		/* 00110 */ {   1,   2,   0,   0,   2},
+		/* 00111 */ {  16,  32,   0,   0,   0},
+
+		/* 01000 */ {   1,   0,   1, 0.5, 0.2},
+		/* 01001 */ {   1,   0,   2,   2,   0},
+		/* 01010 */ {   2,   0,   5,   0,   1},
+		/* 01011 */ {   2,   0,   4,   0,   0},
+		/* 01100 */ {   4,   0,   0,   4,   2},
+		/* 01101 */ {   2,   0,   0,   4,   0},
+		/* 01110 */ { 100,   0,   0,   0,  80},
+		/* 01111 */ { 100,   0,   0,   0,   0},
+		
+
+		/* 10000 */ {   0,   1, 0.5, 0.2, 0.1},
+		/* 10001 */ {   0, 1.5, 0.6, 1.5,   0},
+		/* 10010 */ {   0,   4,   4,   0,   2},
+		/* 10011 */ {   0,   4,   4,   0,   0},
+		/* 10100 */ {   0,   5,   0,   2,   0},
+		/* 10101 */ {   0,   6,   0,   6,   0},
+		/* 10110 */ {   0, 100,   0,   0,  80},
+		/* 10111 */ {   0, 100,   0,   0,   0},
+
+		/* 11000 */ {   0,   0,   2,   1, 0.5},
+		/* 11001 */ {   0,   0,   4,   4,   0},
+		/* 11010 */ {   0,   0, 100,   0,  80},
+		/* 11011 */ {   0,   0, 100,   0,   0},
+		/* 11100 */ {   0,   0,   0, 100,  80},
+		/* 11101 */ {   0,   0,   0, 100,   0},
+		/* 11110 */ {   0,   0,   0,   0, 100},
+		/* 11111 */ {   0,   0,   0,   0,   0},
+	};
+
+
+	void str1_calcScore(int i1len,
+		std::function<int(int)> getI2Length,
+		std::function<int(int, int)> getStone,
+		std::function<double*(int, int)> getScore,
+		int mystone,
+		double rate
+	) {
+		
+		for(int i1=0; i1<i1len; i1++) {
+
+			int len_beg = -1;
+			unsigned long pattern = 0;
+
+			int i2len = getI2Length(i1);
+			for(int i2=0; i2<i2len; i2++) {
+				int cstone = getStone(i1, i2);
+
+			//	自分の石か、空白なら
+				if(!cstone || cstone == mystone) {
+				//	連続開始の場合、連続開始位置を設定
+					if(len_beg < 0) len_beg = i2;
+				//	石の有無を記録
+					pattern = (pattern << 1) | (!!cstone);
+				}else{
+				//	連続を終了
+					len_beg = -1;
+				}
+
+			//	五連続になれば
+				if(i2 - len_beg + 1 == 5) {
+					double* cef5 = str1_ef5[pattern & 31];
+					for(int i=0; i<5; i++) *getScore(i1, len_beg + i) += rate * cef5[i];
+				}
+
+			}
+		}
+
 	}
+
+	void str1_calcStoneAll(const int board[][BOARD_SIZE], double score[][BOARD_SIZE], int mystone, double rate) {
+		
+	//	X方向
+		str1_calcScore(BOARD_SIZE,
+			[](int i1){ return BOARD_SIZE; },
+			[&](int i1, int i2){ return  board[i1][i2]; },
+			[&](int i1, int i2){ return &score[i1][i2]; },
+			mystone, rate
+		);
+		
+	//	Y方向
+		str1_calcScore(BOARD_SIZE,
+			[](int i1){ return BOARD_SIZE; },
+			[&](int i1, int i2){ return  board[i2][i1]; },
+			[&](int i1, int i2){ return &score[i2][i1]; },
+			mystone, rate
+		);
+		
+	//	右下がり斜め方向
+		str1_calcScore(BOARD_SIZE*2-1,
+			[](int i1){ return (i1 <= 9) ? i1+1 : 19-i1; },
+			[&](int i1, int i2){ return  board[i1 < 9 ? 9-i1+i2 : i2][i1 < 9 ? i2 : i1-9+i2]; },
+			[&](int i1, int i2){ return &score[i1 < 9 ? 9-i1+i2 : i2][i1 < 9 ? i2 : i1-9+i2]; },
+			mystone, rate
+		);
+		
+	//	左下がり斜め方向
+		str1_calcScore(BOARD_SIZE*2-1,
+			[](int i1){ return (i1 <= 9) ? i1+1 : 19-i1; },
+			[&](int i1, int i2){ return  board[i1 < 9 ? i2 : i2+i1-9][i1 < 9 ? i1-i2 : 9-i2]; },
+			[&](int i1, int i2){ return &score[i1 < 9 ? i2 : i2+i1-9][i1 < 9 ? i1-i2 : 9-i2]; },
+			mystone, rate
+		);
+
+	}
+
+
+	void strategy1(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history ) {
 	
+	//	今の色
+		int mystone =  (count % 2) ? STONE_BLACK : STONE_WHITE;
+		int enstone =  (mystone == STONE_WHITE) ? STONE_BLACK : STONE_WHITE;
 
-	if (loop == 3 || loop == 4)
-	{
-		check = 0;
-		while (check == 0)
-		{
-			tmp_d = (double)rand() / ((double)RAND_MAX + 1);
-			*pos_x = (int)(tmp_d * 10.0);
+	//	評価値
+		double score[BOARD_SIZE][BOARD_SIZE] = {0};
 
-			tmp_d = (double)rand() / ((double)RAND_MAX + 1);
-			*pos_y = (int)(tmp_d * 10.0);
+	//	評価値を計算
+		str1_calcStoneAll(board, score, enstone, 2.0);
+	//	str1_calcStoneAll(board, score, mystone, 1.0);
 
-			if (board[*pos_y][*pos_x] == STONE_SPACE && *pos_y <= 5 && *pos_x <= 5 && *pos_y >= 4 && *pos_x >= 4)
-				check = 1;
-		}
-	} else
-	{
-		val = str1_alphabeta(tmp_board, depth, which, count, alpha, beta);
-		*pos_x = val % BOARD_SIZE;
-		*pos_y = val / BOARD_SIZE;
-	}
+	//	
+		double cmax = 0;
+		int xmax = -1;
+		int ymax = -1;
 
-	loop++;
-}
-
-int str1_alphabeta(int board[][BOARD_SIZE], int depth, int which, int count, int alpha, int beta){
-	int i, j;
-	int best_x, best_y, val;
-	if (depth == 0){
-		return str1_eval(board, which, count);
-	}
-
-	if (depth % 2 == 1){
-		alpha = -9999;
-	}
-	else{
-		beta = 9999;
-	}
-
-
-	for (i = 0; i<BOARD_SIZE; i++){
-		for (j = 0; j<BOARD_SIZE; j++){
-			if (board[i][j] == STONE_SPACE){
-				board[i][j] = which;
-				changeTurn(&which);
-				val = str1_alphabeta(board, depth - 1, which, count, alpha, beta);
-				board[i][j] = STONE_SPACE;
-				if (depth % 2 == 1){
-					if (val >= alpha){
-						alpha = val;
-						best_x = j;
-						best_y = i;
-					}
-					if (alpha > beta){
-						return alpha;
-					}
-				}
-				else{
-					if (val <= beta){
-						beta = val;
-						best_x = j;
-						best_y = i;
-					}
-					if (alpha > beta){
-						return beta;
-					}
+		for(int iy=0; iy<BOARD_SIZE; iy++) {	
+			for(int ix=0; ix<BOARD_SIZE; ix++) {
+				if(board[iy][ix]) continue;
+				if(xmax < 0 || ymax < 0){ xmax = ix; ymax = iy; }
+				double cscore = score[iy][ix];
+				if(cmax < cscore){
+					cmax = cscore;
+					xmax = ix;
+					ymax = iy;
 				}
 			}
 		}
-	}
-	if (depth == 3){
-		return best_x + best_y*BOARD_SIZE;
-	}
-	else if (depth % 2 == 1){
-		return alpha;
-	}
-	else{
-		return beta;
-	}
-}
 
-
-int str1_eval(int board[][BOARD_SIZE], int which, int count){
-	int three_cnt = 0, four_cnt = 0, five_cnt = 0, stone_cnt[3] = { 0, 0, 0 };
-	int i, j, k, l;
-	if (count < 4){
-		if (count % 2 == 1){
-			if (board[4][4] == which || board[4][5] == which){
-				return 10000;
-			}
-		}
-		else if (count % 2 == 0){
-			if (board[5][4] == which || board[5][5] == which){
-				return 10000;
-			}
-		}
+		*pos_x = xmax;
+		*pos_y = ymax;
 	}
 
-	else{
-		for (i = 0; i < BOARD_SIZE; i++){
-			for (j = 0; j < BOARD_SIZE; j++){
-				if (i <= BOARD_SIZE / 2){
-					if (j <= BOARD_SIZE / 2){
-						if (board[i][j] == which){
-							for (k = 1; k < 5; k++){
-								if (board[i][j + k] == which){
-									stone_cnt[0]++;
-								}
-								if (board[i + k][j] == which){
-									stone_cnt[1]++;
-								}
-								if (board[i + k][j + k] == which){
-									stone_cnt[2]++;
-								}
-							}
-							if (stone_cnt[0] == 3 || stone_cnt[1] == 3 || stone_cnt[2] == 3){
-								three_cnt++;
-							}
-							if (stone_cnt[0] == 4 || stone_cnt[1] == 4 || stone_cnt[2] == 4){
-								four_cnt++;
-							}
-							if (stone_cnt[0] == 5 || stone_cnt[2] == 5 || stone_cnt[2] == 5){
-								five_cnt++;
-							}
-						}
-						for (l = 0; l < 3; l++){
-							stone_cnt[l] = 0;
-						}
-					}
-					else{
-						if (board[i][j] == which){
-							for (k = 1; k < 5; k++){
-								if (board[i][j - k] == which){
-									stone_cnt[0]++;
-								}
-								if (board[i + k][j] == which){
-									stone_cnt[1]++;
-								}
-								if (board[i + k][j - k] == which){
-									stone_cnt[2]++;
-								}
-							}
-							if (stone_cnt[0] == 3 || stone_cnt[1] == 3 || stone_cnt[2] == 3){
-								three_cnt++;
-							}
-							if (stone_cnt[0] == 4 || stone_cnt[1] == 4 || stone_cnt[2] == 4){
-								four_cnt++;
-							}
-							if (stone_cnt[0] == 5 || stone_cnt[2] == 5 || stone_cnt[2] == 5){
-								five_cnt++;
-							}
-						}
-						for (l = 0; l < 3; l++){
-							stone_cnt[l] = 0;
-						}
-					}
-				}
-				else{
-					if (j <= BOARD_SIZE / 2){	
-						if (board[i][j] == which){
-							for (k = 1; k < 5; k++){
-								if (board[i][j + k] == which){
-									stone_cnt[0]++;
-								}
-								if (board[i - k][j] == which){
-									stone_cnt[1]++;
-								}
-								if (board[i - k][j + k] == which){
-									stone_cnt[2]++;
-								}
-							}
-							if (stone_cnt[0] == 3 || stone_cnt[1] == 3 || stone_cnt[2] == 3){
-								three_cnt++;
-							}
-							if (stone_cnt[0] == 4 || stone_cnt[1] == 4 || stone_cnt[2] == 4){
-								four_cnt++;
-							}
-							if (stone_cnt[0] == 5 || stone_cnt[2] == 5 || stone_cnt[2] == 5){
-								five_cnt++;
-							}
-						}
-						for (l = 0; l < 3; l++){
-							stone_cnt[l] = 0;
-						}
-					}
-					else{	
-						if (board[i][j] == which){
-							for (k = 1; k < 5; k++){
-								if (board[i][j - k] == which){
-									stone_cnt[0]++;
-								}
-								if (board[i - k][j] == which){
-									stone_cnt[1]++;
-								}
-								if (board[i - k][j - k] == which){
-									stone_cnt[2]++;
-								}
-							}
-							if (stone_cnt[0] == 3 || stone_cnt[1] == 3 || stone_cnt[2] == 3){
-								three_cnt++;
-							}
-							if (stone_cnt[0] == 4 || stone_cnt[1] == 4 || stone_cnt[2] == 4){
-								four_cnt++;
-							}
-							if (stone_cnt[0] == 5 || stone_cnt[2] == 5 || stone_cnt[2] == 5){
-								five_cnt++;
-							}
-						}
-						for (l = 0; l < 3; l++){
-							stone_cnt[l] = 0;
-						}
-					}
-				}
-			}
-		}
-		if (three_cnt == 0 && four_cnt == 0 && five_cnt == 0){
-			return stone_cnt[0];
-		}
-		else{
-			return three_cnt + 1000 * four_cnt + 50000 * five_cnt;
-		}
-	}
-}
-
-//=======================================================
-// Group 2
-//=======================================================
-
-
-int str2_scan(int x,int y,int a,int b,const int board[][BOARD_SIZE]);
-void strategy2(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history);
-
-int str2_scan(int x,int y,int a,int b,const int board[][BOARD_SIZE]){ //a=0:左上から　1:真上から　2:右上から 3:真横から
-    //b=1:黒　2:白
-    int dx[]={-1,1,0,0,1,-1,-1,1};
-    int dy[]={-1,1,-1,1,-1,1,0,0};
-    int len=0;
-
-    for(int i=1;i<=4;i++){
-        if (b==board[y+i*dy[2*a]][x+i*dx[2*a]]
-           && y+i*dy[2*a] < BOARD_SIZE
-           && x+i*dx[2*a] < BOARD_SIZE
-           && y+i*dy[2*a] > 0
-           && x+i*dx[2*a] > 0)
-        {
-            len++;
-        }
-        else{
-            break;
-        }
-        if(len==4){
-            return 100000;
-        }
-    }
-    for(int i=1;i<=4;i++){
-        if (b==board[y+i*dy[2*a+1]][x+i*dx[2*a+1]]
-            && y+i*dy[2*a+1] < BOARD_SIZE
-            && x+i*dx[2*a+1] < BOARD_SIZE
-            && y+i*dy[2*a+1] > 0
-            && x+i*dx[2*a+1] > 0)
-        {
-            len++;
-        }
-        else{
-            break;
-        }
-        if(len==4){
-            return 100000;
-        }
-    }
-    if(len==3){
-        return 5000;
-    }
-    if(len==2){
-        return 2000;
-    }
-    if(len==1){
-        return 1000;
-    }
-    return 0;
-}
 
 
 
 
-void strategy2(const int board[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history){
-    int search[BOARD_SIZE][BOARD_SIZE];
 
-	printf( "Strategy 2\t" );
 
-    for(int i=0;i<BOARD_SIZE;i++){
-        for(int j=0;j<BOARD_SIZE;j++){
-            search[i][j]=0;
-        }
-    }
-    
-    if(count==0){ //先手の初手は4,5
-        *pos_x=4;
-        *pos_y=5;
-        return;
-    }
-    if(count==1){  //後手の初手は先手のななめ
-        *pos_x=history[0].x+1;
-        *pos_y=history[0].y+1;
-        return;
-    }
-    
-    if(count==2){
-        if(board[6][5]!=0){
-            *pos_x=6;
-            *pos_y=5;
-            return;
-        }
-        else{
-            *pos_x=2;
-            *pos_y=5;
-            return;
-        }
-    }
-    for(int i=0;i<count;i++){
-        int p=history[i].x;
-        int q=history[i].y;
-        if(board[q+1][p+1]==0 && p+1 < BOARD_SIZE && q+1 < BOARD_SIZE){
-            search[q+1][p+1]=1;
-        }
-        if(board[q+1][p]==0 && q+1 < BOARD_SIZE && p >= 0 && p < BOARD_SIZE){
-            search[q+1][p]=1;
-        }
-        if(board[q+1][p-1]==0 && q+1 < BOARD_SIZE && p-1 >= 0 ){
-            search[q+1][p-1]=1;
-        }
-        if(board[q][p+1]==0 && q >= 0 && q < BOARD_SIZE && p+1 < BOARD_SIZE){
-            search[q][p+1]=1;
-        }
-        if(board[q-1][p-1]==0 && p-1 >= 0 && q-1 >= 0 ){
-            search[q-1][p-1]=1;
-        }
-        if(board[q][p-1]==0 && q >= 0 && q < BOARD_SIZE && p-1 >= 0 ){
-            search[q][p-1]=1;
-        }
-        if(board[q-1][p+1]==0 && q-1 >= 0 && p+1 < BOARD_SIZE){
-            search[q-1][p+1]=1;
-        }
-        if(board[q-1][p]==0 && q-1 >= 0 &&  p >= 0 && p < BOARD_SIZE){
-            search[q-1][p]=1;
-        }
-    }
-    
-    
-    int max_x=0,max_y=0,max;
-    int s;
-    max=0;
-    for(int i=0;i<BOARD_SIZE;i++){
-        for(int j=0;j<BOARD_SIZE;j++){
-            double f=0;
-            if(search[j][i]==1){
-                printf("\n");
-                for(int a=0;a<4;a++){
-                    printf("\n");
-                    s=str2_scan(i,j,a,count%2+2,board);
-                    printf("自分 %d,%d=%d\n",i,j,s);
-                    
-                    f+=3/2*s;
-                    s=str2_scan(i,j,a,count%2+3,board);
-                    printf("相手 %d,%d=%d\n",i,j,s);
-                    f+=s/2;
-                    printf("%d,%d   %F",i,j,f);
-                    if(max<f){
-                        max_x=i;
-                        max_y=j;
-                        max=(int)f;
-                    }
-                }
-            }
-        }
-    }
-    
-    *pos_x=max_x;
-    *pos_y=max_y;
-    return;
-}
+
+
+
+
+
+
 
 
 //=======================================================
@@ -9921,10 +9685,14 @@ int main( int argc, char **argv )
 
 	if( argc != 3 )
 	{
+		group[0] = 6;
+		group[1] = 1;
+	/*
 		printf( "gobang group_first group_second\n" );
 		printf( "  group_first: 先攻のグループ番号\n" );
 		printf( "  group_first: 後攻のグループ番号\n" );
 		exit( 1 );
+	*/
 	}
 	else
 	{
@@ -9976,7 +9744,7 @@ void inputPutPos(int board[][BOARD_SIZE], const int which, const int count, posi
     char str[256];
     strategy strtgy[16] = {randomStrategy,
     					strategy1,
-    					strategy2,
+    					strategy3,
     					strategy3,
     					strategy4,
     					strategy5,

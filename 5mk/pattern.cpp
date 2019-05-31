@@ -2,10 +2,10 @@
 using namespace Kato;
 
 
-Pattern::Pattern(GetRelStoneFunc get_rel_stone, const Position& p, const Position& diff) {
+Pattern::Pattern(GetRelStoneFunc get_rel_stone, Position&& p, Position&& diff) {
 }
 
-Pattern::RawType Pattern::getPattern(GetRelStoneFunc get_rel_stone, const Position& p, const Position& diff) {
+Pattern::RawType Pattern::getPattern(GetRelStoneFunc get_rel_stone, Position&& p, Position&& diff) {
 
 	using DIndex = int;
 
