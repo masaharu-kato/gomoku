@@ -19,11 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="learning.cpp" />
+    <ClCompile Include="Learning.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Stone.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="board.h" />
-    <ClInclude Include="define.h" />
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Learning.h" />
+    <ClInclude Include="Stone.h" />
+    <ClInclude Include="StoneLine.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

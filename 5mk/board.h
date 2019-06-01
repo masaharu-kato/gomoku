@@ -1,15 +1,9 @@
 #pragma once
-#include "define.h"
+#include "stone.h"
 #include <memory>
 #include <unordered_map>
 
 namespace F19 {
-
-	enum class Stone : char {
-		Stone_None = 0,
-		Stone_Black,
-		Stone_White,
-	};
 
 	using CoordType = int;
 
