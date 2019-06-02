@@ -20,6 +20,7 @@ namespace F19 {
 
 		Stone();
 		Stone(StoneType stone);
+		explicit Stone(char c);
 
 		explicit operator StoneChar() const;
 		size_t getID() const;

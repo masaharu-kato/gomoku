@@ -19,13 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="board.cpp" />
+    <ClCompile Include="coord.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="StoneLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="board.h" />
+    <ClInclude Include="coord.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="StoneLine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\input01.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

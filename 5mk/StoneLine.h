@@ -8,16 +8,24 @@
 
 namespace F19 {
 
+//	石の並びを表現するクラス
 	class StoneLine : public std::vector<Stone> {
 	public:
+
+	//	ハッシュ関数用のクラス
 		struct Hash;
 
+	//	基底型(石の配列)
 		using Base = std::vector<Stone>;
+
+	//	このクラス用のポインタ
 		using Ptr = std::shared_ptr<StoneLine>;
+
+	//	このクラスのインスタンスを保持するためのマップ
 		using Map = std::unordered_map<Base, Ptr, Hash>;
 
-		using Steps = size_t;
-		constexpr static Steps Steps_Infinity = 99; // = std::numeric_limits<size_t>::max();
+		using Steps = int;
+		constexpr static Steps Steps_Infinity = 89; // = std::numeric_limits<Steps>::max();
 
 		static Map instances;
 		static Ptr instance(const Base&);

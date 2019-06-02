@@ -1,9 +1,23 @@
 #include "stone.h"
 #include <stdexcept>
 
-F19::Stone::Stone() : stone(None) {}
+F19::Stone::Stone()
+	: stone(None) {}
 
-F19::Stone::Stone(StoneType stone) : stone(stone) {}
+F19::Stone::Stone(StoneType stone)
+	: stone(stone) {}
+
+F19::Stone::Stone(char c) {
+	if(c == (char)StoneChar::None ){
+		stone = Stone::None;
+	}else if(c == (char)StoneChar::Black){
+		stone = Stone::Black;
+	}else if(c == (char)StoneChar::White){
+		stone = Stone::White;
+	}else{
+		throw std::exception("Invalid stone type.");
+	}
+}
 
 char F19::Stone::getChar() const {
 	if(stone == Stone::None ) return (char)StoneChar::None;

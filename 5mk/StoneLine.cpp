@@ -27,11 +27,11 @@ auto F19::StoneLine::calc_blocked_steps(Stone target) const -> Steps {
 	if(win_steps(target) == Steps_Infinity) return 0;
 
 	Steps min_steps = Steps_Infinity;
-	auto enemy_stone = Stone::reverse(target);
+	auto rev_target = Stone::reverse(target);
 
 	for(size_t i = 0; i < size(); i++) {
 		if(at(i) == Stone::None) {
-			auto c_steps = getWith(i, enemy_stone)->blocked_steps(target) + 1;
+			auto c_steps = getWith(i, rev_target)->blocked_steps(target) + 1;
 			if(min_steps > c_steps) min_steps = c_steps;
 		}
 	}
@@ -57,7 +57,8 @@ auto F19::StoneLine::blocked_steps(Stone target) const -> Steps {
 }
 
 auto F19::StoneLine::grace_steps(Stone target) const -> Steps {
-	return win_steps(target) - blocked_steps(target);
+	auto rev_target = Stone::reverse(target);
+	return win_steps(rev_target) - blocked_steps(rev_target);
 }
 
 bool F19::StoneLine::operator==(const StoneLine& _line) const {

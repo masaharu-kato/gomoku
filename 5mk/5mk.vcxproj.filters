@@ -4,9 +4,23 @@
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StoneLine.cpp" />
+    <ClCompile Include="board.cpp" />
+    <ClCompile Include="coord.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StoneLine.h" />
     <ClInclude Include="Stone.h" />
+    <ClInclude Include="board.h" />
+    <ClInclude Include="coord.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{15dde219-15de-4d8a-82e5-f8edc3a8bff0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\input01.txt">
+      <Filter>res</Filter>
+    </Text>
   </ItemGroup>
 </Project>
