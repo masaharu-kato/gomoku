@@ -25,7 +25,7 @@ namespace F19 {
 		using Map = std::unordered_map<Base, Ptr, Hash>;
 
 		using Steps = int;
-		constexpr static Steps Steps_Infinity = 89; // = std::numeric_limits<Steps>::max();
+		constexpr static Steps Steps_Infinity = 99; // = std::numeric_limits<Steps>::max();
 
 		static Map instances;
 		static Ptr instance(const Base&);
@@ -45,6 +45,9 @@ namespace F19 {
 	//	猶予ステップ数
 		Steps grace_steps(Stone target) const;
 
+	//	各位置の猶予ステップ数(その位置にtargetの石を置いた時の猶予ステップ数)
+		Steps grace_steps(Stone target, size_t index) const;
+
 	//	等価比較(ハッシュマップで利用)
 		bool operator==(const StoneLine&) const;
 		bool operator!=(const StoneLine&) const;
@@ -55,16 +58,22 @@ namespace F19 {
 	private:
 		StoneLine(const Base&);
 
-	//	win_steps の計算関数
+	//	win_steps を計算する関数
 		Steps calc_win_steps(Stone target) const;
 
-	//	blocked_steps の計算関数
+	//	blocked_steps を計算する関数
 		Steps calc_blocked_steps(Stone target) const;
 
-	//	計算済みかのフラグ
+	//	各位置における grace_steps を計算する関数
+		void calc_grace_steps(Stone target) const;
+
+
+		void out_graces(Stone target) const;
+
 
 		mutable std::unique_ptr<Steps> _win_steps[2];
 		mutable std::unique_ptr<Steps> _blocked_steps[2];
+		mutable std::vector<Steps> _grace_steps[2];
 
 	};
 		

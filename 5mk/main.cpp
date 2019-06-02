@@ -19,6 +19,9 @@ int main(void) {
 
 	std::cout << "--White---------\n";
 	board.calc_next_values(Stone::White);
+	
+	std::cout << "--Instances-----\n";
+	StoneLine::out_instances(std::cout);
 
 	return 0;
 }

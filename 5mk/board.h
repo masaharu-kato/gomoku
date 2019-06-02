@@ -4,28 +4,17 @@
 #include <memory>
 #include <unordered_map>
 #include <functional>
+#include <vector>
+#include <array>
 
 namespace F19 {
+	
+	using Line = std::vector<Pos>;
 
 	class Board {
 	public:
 
 		using Ptr = std::shared_ptr<Board>;
-
-		class Iterator;
-		//class VerticalIterator;
-		//class HorizontalIterator;
-		//class RightDiagonalIterator;
-		//class LeftDiagonalIterator;
-
-		//class AllVerticalIterator;
-		//class AllHorizontalIterator;
-		//class AllRightDiagonalIterator;
-		//class AllLeftDiagonalIterator;
-
-		class LastPosLineIterator;
-		class AllLineIterator;
-
 		using Value = int;
 
 	//	新しい盤面の作成
@@ -40,40 +29,17 @@ namespace F19 {
 	//	位置 (x, y) にある石を取得
 		Stone getStone(X x, Y y) const;
 
-	//	位置 p が盤面内か調べる
-		bool isInside(Pos p) const;
+	//	位置 p が盤面内か調べる(静的)
+		static bool isInside(Pos p);
 
-	//	位置 (x, y) が盤面内か調べる
-		bool isInside(X x, Y y) const;
+	//	位置 (x, y) が盤面内か調べる(静的)
+		static bool isInside(X x, Y y);
 
-	//	縦方向(Y方向の昇順)の並びを取得
-		StoneLine::Ptr getVertical     (X x) const;
-
-	//	横方向(X方向の昇順)の並びを取得
-		StoneLine::Ptr getHorizontal   (Y y) const;
-
-	//	X軸を起点とする左斜めの並びを取得
-		StoneLine::Ptr getLeftDiagonal (X x) const;
-
-	//	Y軸を起点とする左斜めの並びを取得
-		StoneLine::Ptr getLeftDiagonal (Y y) const;
+	////	縦・横・斜め全ての並びを処理する(石の並びのみ)
+	//	void forEachLines(std::function<void(StoneLine::Ptr)>) const;
 		
-	//	X軸を起点とする右斜めの並びを取得
-		StoneLine::Ptr getRightDiagonal(X x) const;
-		
-	//	Y軸を起点とする右斜めの並びを取得
-		StoneLine::Ptr getRightDiagonal(Y y) const;
-
-	//	縦・横・斜め全ての並びを処理する
-		void forEachLines(std::function<void(StoneLine::Ptr)>) const;
-
-		//AllVerticalIterator      getAllVertical     () const;
-		//AllHorizontalIterator    getAllHorizontal   () const;
-		//AllRightDiagonalIterator getAllRightDiagonal() const;
-		//AllLeftDiagonalIterator  getAllLeftDiagonal () const;
-
-		LastPosLineIterator getLastPosLines() const;
-		AllLineIterator getAllLines() const;
+	//	縦・横・斜め全ての並びを処理する(位置と石の並び)
+		void forEachLines(std::function<void(const Line&, StoneLine::Ptr)>) const;
 
 		constexpr static CoordType size = 10;
 
@@ -87,12 +53,15 @@ namespace F19 {
 
 		Board() = default;
 
-		Value calc_value(Stone target) const;
-
 		void calc_next_values(Stone target);
 		
 
 	private:
+		using PosValueMap = std::unordered_map<Pos, Value, Pos::Hash>;
+
+		constexpr static size_t Line_Length = 6 * size - 2;
+		using AllLines = std::array<Line, Line_Length>;
+
 		Stone board[size][size] = {Stone::None};
 
 		Board(Ptr parent, Pos pos);
@@ -100,14 +69,17 @@ namespace F19 {
 		void setStone(X x, Y y, Stone stone);
 		void setStone(Pos p, Stone stone);
 
-		StoneLine::Ptr getLine(X begx, Y begy, X invx, Y invy) const;
-
+		static Line getLine(X begx, Y begy, X invx, Y invy);
+		StoneLine::Ptr generateStoneLine(const Line& line) const;
+		static void generateLines();
 
 		Ptr parent;
 		Stone last_stone;
 		Value current_value;
+		
+		static bool f_lines_generated;
+		static AllLines lines;
 
-	//	std::unordered_map<Pos, Ptr> nexts; 
 
 	};
 	

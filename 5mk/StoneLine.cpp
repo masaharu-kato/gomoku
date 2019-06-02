@@ -40,6 +40,26 @@ auto F19::StoneLine::calc_blocked_steps(Stone target) const -> Steps {
 
 }
 
+
+//	äeà íuÇ…Ç®ÇØÇÈ grace_steps ÇåvéZÇ∑ÇÈä÷êî
+void F19::StoneLine::calc_grace_steps(Stone target) const {
+	
+	auto& graces = _grace_steps[target.getID() - 1];
+	graces.resize(size());
+
+	for(size_t i = 0; i < size(); i++) {
+		if(at(i) == Stone::None) {
+			graces[i] = getWith(i, target)->grace_steps(target);
+		}else{
+			graces[i] = 0;
+		}
+	}
+
+}
+
+
+
+
 auto F19::StoneLine::win_steps(Stone target) const -> Steps {
 	size_t index = target.getID() - 1;
 	if(!_win_steps[index]){
@@ -59,6 +79,12 @@ auto F19::StoneLine::blocked_steps(Stone target) const -> Steps {
 auto F19::StoneLine::grace_steps(Stone target) const -> Steps {
 	auto rev_target = Stone::reverse(target);
 	return win_steps(rev_target) - blocked_steps(rev_target);
+}
+
+auto F19::StoneLine::grace_steps(Stone target, size_t index) const -> Steps {
+	size_t target_index = target.getID() - 1;
+	if(!_grace_steps[target_index].size()) calc_grace_steps(target);
+	return _grace_steps[target_index][index];
 }
 
 bool F19::StoneLine::operator==(const StoneLine& _line) const {
@@ -174,9 +200,31 @@ void F19::StoneLine::out_instances(std::ostream& os) {
 			<< "\tBw:" << i.second->win_steps    (Stone::Black)
 			<< "\tBb:" << i.second->blocked_steps(Stone::Black)
 			<< "\tWw:" << i.second->win_steps    (Stone::White)
-			<< "\tWb:" << i.second->blocked_steps(Stone::White)
-			<< "\n";
+			<< "\tWb:" << i.second->blocked_steps(Stone::White);
+
+		std::cout << "\t Bg: ";
+		i.second->out_graces(Stone::Black);
+		
+		std::cout << "\t Wg: ";
+		i.second->out_graces(Stone::White);
+
+		std::cout << "\n";
 	}
+}
+
+void F19::StoneLine::out_graces(Stone target) const {
+	
+	for(size_t i = 0; i < size(); i++) {
+		auto cstep = grace_steps(target, i);
+		if(cstep == Steps_Infinity) {
+			std::cout << "#";
+		}else if(cstep < 0){
+			std::cout << "-";
+		}else{
+			std::cout << cstep;
+		}
+	}
+
 }
 
 

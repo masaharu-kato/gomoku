@@ -5,7 +5,7 @@ auto F19::Board::getStone(X x, Y y) const -> Stone {
 	return board[x][y];
 }
 
-bool F19::Board::isInside(X x, Y y) const {
+bool F19::Board::isInside(X x, Y y) {
 	return x >= 0 && x < size && y >= 0 && y < size;
 }
 
@@ -13,127 +13,54 @@ auto F19::Board::getStone(Pos p) const -> Stone {
 	return getStone(p.x, p.y);
 }
 
-bool F19::Board::isInside(Pos p) const {
+bool F19::Board::isInside(Pos p) {
 	return isInside(p.x, p.y);
 }
 
-auto F19::Board::getVertical(X x) const -> StoneLine::Ptr {
-	return getLine(x, 0, 0, 1);
-}
-
-auto F19::Board::getHorizontal(Y y) const -> StoneLine::Ptr {
-	return getLine(0, y, 1, 0);
-}
-
-auto F19::Board::getLeftDiagonal(X x) const -> StoneLine::Ptr {
-	return getLine(x, 0, 1, 1);
-}
-
-auto F19::Board::getLeftDiagonal(Y y) const -> StoneLine::Ptr {
-	return getLine(0, y, 1, 1);
-}
-
-auto F19::Board::getRightDiagonal(X x) const -> StoneLine::Ptr {
-	return getLine(x, 0, -1, 1);
-}
-
-auto F19::Board::getRightDiagonal(Y y) const -> StoneLine::Ptr {
-	return getLine(size - 1, y, -1, 1);
-}
-
-auto F19::Board::getLine(X begx, Y begy, X invx, Y invy) const -> StoneLine::Ptr {
+auto F19::Board::getLine(X begx, Y begy, X invx, Y invy) -> Line {
 
 	X cx = begx;
 	Y cy = begy;
-	StoneLine::Base line;
+	Line poses;
 
 	while(isInside(cx, cy)) {
-		line.push_back(getStone(cx, cy));
+		poses.emplace_back(cx, cy);
 		cx += invx;
 		cy += invy;
 	}
 
-	return StoneLine::instance(line);
+	return poses;
 
 }
 
-void F19::Board::forEachLines(std::function<void(StoneLine::Ptr)> func) const {
+void F19::Board::generateLines() {
 
-	for(X x = 0; x < size; ++x) func(getVertical(x));
-	for(Y y = 0; y < size; ++y) func(getHorizontal(y));
-	for(X x = 0; x < size; ++x) func(getLeftDiagonal(x));
-	for(Y y = 1; y < size; ++y) func(getLeftDiagonal(y));
-	for(X x = 0; x < size; ++x) func(getRightDiagonal(x));
-	for(Y y = 1; y < size; ++y) func(getRightDiagonal(y));
+	size_t i = 0;
+	for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, 0, 1);
+	for(Y y = 0; y < size; ++y) lines[i++] = getLine(0, y, 1, 0);
+	for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, 1, 1);
+	for(Y y = 1; y < size; ++y) lines[i++] = getLine(0, y, 1, 1);
+	for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, -1, 1);
+	for(Y y = 1; y < size; ++y) lines[i++] = getLine(size - 1, y, -1, 1);
+
+	f_lines_generated = true;
 	
 }
-
-auto F19::Board::calc_value(Stone target) const -> Value {
-
-	std::unordered_map<StoneLine::Steps, size_t> counts;
-
-//	‘S‚Ä‚Ì•À‚Ñ‚Ì—P—\’l‚ð’²‚×‚é
-//	std::vector<StoneLine::Steps> graces;
-	forEachLines([&](StoneLine::Ptr ptr){
-		auto grace = ptr->grace_steps(target);
-
-		counts[grace] ++;
-
-	//	graces.push_back(grace);
-	//#ifdef _DEBUG
-	//	std::cout << *ptr << "\tg:" << grace << "\n";
-	//#endif
-	});
-
-	auto value = counts[-StoneLine::Steps_Infinity] * 500000
-		+ counts[-1] * 100000
-		+ counts[0] * 10000
-		+ counts[1] * 1000
-		+ counts[2] * 100
-		+ counts[3] * 10
-		+ counts[4];
-
-
-////	¸‡‚É•À‚Ñ‘Ö‚¦
-//	std::sort(graces.begin(), graces.end());
-//
-////	Å‰‚É’l‚ªƒCƒ“ƒfƒbƒNƒX’l‚ð‰º‰ñ‚é‚Æ‚«‚Ì—P—\’l‚ð‹‚ß‚é
-////	‚½‚¾‚µA—P—\’l‚ª•‰‚Ìê‡/Infinity ‚É“ž’B‚µ‚½ê‡/—P—\’lƒŠƒXƒg‚ÌÅŒã‚Ü‚Å“ž’B‚·‚ê‚Î‘Å‚¿Ø‚é
-//
-//	StoneLine::Steps i = 0;
-//	if(graces[i] >= 0) {
-//		for(i = 0; i < graces.size(); i++) {
-//			if(graces[i] == StoneLine::Steps_Infinity || graces[i] < i) break;
-//		}
-//	}
-//
-//	auto value = graces[i];
-////
-//#ifdef _DEBUG
-//	std::cout << "graces: ";
-//	for(auto grace : graces) std::cout << grace << ", ";
-//	std::cout << "\n";
-//	std::cout << "value: " << value << " (index: " << i << ")\n";
-//#endif
-
-	return value;
-}
-
 
 
 void F19::Board::calc_next_values(Stone target) {
 
-	std::unordered_map<Pos, Value, Pos::Hash> values;
+	PosValueMap values;
 
-	forEachEmpties([&](Pos p){
-	//	std::cout << p.x << ", " << p.y << "\n";
-		setStone(p, target);
-
-		auto value = - calc_value(target) + calc_value(Stone::reverse(target));
-		
-		values.insert_or_assign(p, value);
-
-		setStone(p, Stone::None);
+//	‘S‚Ä‚Ì•À‚Ñ‚Ì—P—\’l‚ð’²‚×‚é
+	forEachLines([&](const Line& line, StoneLine::Ptr ptr){
+		for(size_t i = 0; i < line.size(); i++) {
+			auto cpos = line[i];
+			if(getStone(cpos) == Stone::None) {
+				auto cvalue = ptr->grace_steps(target, i);
+				values[cpos] += Value(10000.0 / (cvalue * 10 + 1));
+			}
+		}
 	});
 
 #ifdef _DEBUG
@@ -144,7 +71,7 @@ void F19::Board::calc_next_values(Stone target) {
 				printf("%+7d ", values[p]);
 			}else{
 				auto cstone = getStone(p);
-				if(cstone == Stone::None) throw std::exception("None stone is impossible here.");
+			//	if(cstone == Stone::None) throw std::exception("None stone is impossible here.");
 				std::cout << "  [" << cstone.getChar() << "]   ";
 			}
 		}
@@ -181,6 +108,22 @@ void F19::Board::forEachEmpties(std::function<void(X, Y)> func) const {
 	}
 }
 
+void F19::Board::forEachLines(std::function<void(const Line&, StoneLine::Ptr)> func) const {
+
+	if(!f_lines_generated) generateLines();
+
+	for(const auto& line : lines) func(line, generateStoneLine(line));
+
+}
+
+auto F19::Board::generateStoneLine(const Line& line) const -> StoneLine::Ptr {
+	StoneLine::Base base;
+	for(auto pos : line) {
+		base.push_back(getStone(pos));
+	}
+	return StoneLine::instance(base);
+}
+
 
 //	“ü—ÍŠÖ”
 std::istream& F19::operator >>(std::istream& is, Board& board) {
@@ -205,3 +148,6 @@ std::ostream& F19::operator <<(std::ostream& os, const Board& board) {
 	}
 	return os;
 }
+
+bool F19::Board::f_lines_generated = false;
+F19::Board::AllLines F19::Board::lines;
