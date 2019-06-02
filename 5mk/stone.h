@@ -7,14 +7,34 @@ namespace F19 {
 	class Stone{
 	public:
 		enum StoneType : char {
+			None  = 0,
+			Black = 1,
+			White = 2,
+		};
+
+		enum class StoneChar : char {
 			None  = '.',
 			Black = 'X',
 			White = 'O',
 		};
 
+		Stone();
 		Stone(StoneType stone);
 
-		operator StoneType() const;
+		explicit operator StoneChar() const;
+		size_t getID() const;
+		char getChar() const;
+
+		//bool isNone() const;
+		//bool isBlack() const;
+		//bool isWhite() const;
+		//bool isNoneOrBlack() const;
+		//bool isNoneOrWhite() const;
+
+		bool operator ==(Stone stone) const;
+		bool operator !=(Stone stone) const;
+
+		static Stone reverse(Stone stone);
 
 	private:
 		StoneType stone;

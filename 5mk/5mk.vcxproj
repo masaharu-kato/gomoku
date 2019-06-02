@@ -19,13 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Learning.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Stone.cpp" />
+    <ClCompile Include="StoneLine.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h" />
-    <ClInclude Include="Learning.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="StoneLine.h" />
   </ItemGroup>

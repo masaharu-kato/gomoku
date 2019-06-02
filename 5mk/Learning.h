@@ -1,12 +1,13 @@
 #pragma once
 #include <unordered_map>
 #include "Board.h"
+#include "StoneLine.h"
 
 namespace F19 {
 
 	class Learning {
 	public:
-		using StoneLine = std::string;
+	//	using StoneLine = std::string;
 		using Steps = size_t;
 
 		struct StepsData {

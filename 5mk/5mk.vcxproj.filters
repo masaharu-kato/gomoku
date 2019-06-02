@@ -3,12 +3,10 @@
   <ItemGroup>
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Learning.cpp" />
+    <ClCompile Include="StoneLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StoneLine.h" />
     <ClInclude Include="Stone.h" />
-    <ClInclude Include="Board.h" />
-    <ClInclude Include="Learning.h" />
   </ItemGroup>
 </Project>
