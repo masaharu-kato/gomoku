@@ -3,16 +3,19 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define BOARD_SIZE 10      // 盤面サイズ 10 * 10
-#define STONE_SPACE 0      // 盤面にある石 なし
-#define STONE_BLACK 1      // 盤面にある石 黒
-#define STONE_WHITE 2      // 盤面にある石 白
+#include "define.h"
+#include "strategy.h"
 
-
-typedef struct{
-	int x;
-	int y;
-} position;
+//#define BOARD_SIZE 10      // 盤面サイズ 10 * 10
+//#define STONE_SPACE 0      // 盤面にある石 なし
+//#define STONE_BLACK 1      // 盤面にある石 黒
+//#define STONE_WHITE 2      // 盤面にある石 白
+//
+//
+//typedef struct{
+//	int x;
+//	int y;
+//} position;
 
 void inputPutPos(int board[][BOARD_SIZE], const int which, const int count, position *history, const int *group);
 void changeTurn(int *which_turn);
@@ -4445,57 +4448,53 @@ int enemyEvaluation(int st, int sp, int which_turn) {
 //=======================================================
 int main(int argc, char **argv)
 {
-	// 変数宣言
-	int board[BOARD_SIZE][BOARD_SIZE];
-	position *history;
-	int which_turn;
-	int count;
-	int group[2];
+	while(std::cin) {
+		// 変数宣言
+		int board[BOARD_SIZE][BOARD_SIZE];
+		position *history;
+		int which_turn;
+		int count;
+		int group[2];
 
-	if (argc != 3)
-	{
-		printf("gobang group_first group_second\n");
-		printf("  group_first: 先攻のグループ番号\n");
-		printf("  group_first: 後攻のグループ番号\n");
-		exit(1);
-	}
-	else
-	{
-		group[0] = atoi(argv[1]);
-		group[1] = atoi(argv[2]);
+		std::cout << "先攻のグループ番号: ";
+		std::cin >> group[0];
+
+		std::cout << "後攻のグループ番号: ";
+		std::cin >> group[1];
+
 		printf("group_first (Ｘ) = %d\n", group[0]);
 		printf("group_second (Ｏ) = %d\n", group[1]);
 
 		fprintf(stderr, "First: %d, Second: %d\n", group[0], group[1]);
-	}
 
-	// 初期処理
-	gameInit(board, &which_turn);
-	history = (position*)malloc(sizeof(position) * BOARD_SIZE * BOARD_SIZE);
-	boardPrint(board);
-	srand((unsigned)time(NULL));
-
-	//---- メインループ
-	for (count = 0; count < BOARD_SIZE * BOARD_SIZE; count++){
-		//--- 入力処理
-		inputPutPos(board, which_turn, count, history, group);
-
-		//--- 出力処理
+		// 初期処理
+		gameInit(board, &which_turn);
+		history = (position*)malloc(sizeof(position) * BOARD_SIZE * BOARD_SIZE);
 		boardPrint(board);
+		srand((unsigned)time(NULL));
 
-		//--- 終了判定
-		if (gameEndProcess(board)) { break; }
+		//---- メインループ
+		for (count = 0; count < BOARD_SIZE * BOARD_SIZE; count++){
+			//--- 入力処理
+			inputPutPos(board, which_turn, count, history, group);
 
-		//--- 演算処理
-		changeTurn(&which_turn);
+			//--- 出力処理
+			boardPrint(board);
+
+			//--- 終了判定
+			if (gameEndProcess(board)) { break; }
+
+			//--- 演算処理
+			changeTurn(&which_turn);
+		}
+
+		if (count == BOARD_SIZE * BOARD_SIZE){
+			fprintf(stderr, "引き分けです\n");
+			printf("引き分けです\n");
+		}
+
+		free(history);
 	}
-
-	if (count == BOARD_SIZE * BOARD_SIZE){
-		fprintf(stderr, "引き分けです\n");
-		printf("引き分けです\n");
-	}
-
-	free(history);
 
 	return 0;
 }
@@ -4507,17 +4506,19 @@ void inputPutPos(int board[][BOARD_SIZE], const int which, const int count, posi
 {
 	int pos_x, pos_y;
 	char str[256];
-	strategy strtgy[16] = { randomStrategy,
-		strategy5,
-		strategy6,
-		strategy12,
-		strategy15,
-		strategyA18,
-		strategyB18,
-		strategyC18,
-		strategyD18,
-		strategyE18,
-		keyboardInput,// strategy10 が存在しないため，手打ち入力をここにいれている
+	strategy strtgy[16] = {
+		randomStrategy,	//	0
+		F19::strategy,	//	1
+		strategy5,		//	2
+		strategy6,		//	3
+		strategy12,		//	4
+		strategy15,		//	5
+		strategyA18,	//	6
+		strategyB18,	//	7
+		strategyC18,	//	8
+		strategyD18,	//	9
+		strategyE18,	//	10
+		keyboardInput,	//	11
 	};
 	struct tm *date;
 	time_t current_time;

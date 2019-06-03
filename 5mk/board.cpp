@@ -49,26 +49,42 @@ void F19::Board::generateLines() {
 }
 
 
-void F19::Board::calc_next_values(Stone target) {
+auto F19::Board::calcNextPosition(Stone target) -> Pos {
 
 	PosValueMap values;
 
 	Stone astone = target;
 	Stone estone = Stone::reverse(target);
 
-//	全ての並びの猶予値を調べる
+//	全ての位置の評価値を計算する
 	forEachLines([&](const Line& line, StoneLine::Ptr ptr){
 		for(size_t i = 0; i < line.size(); i++) {
 			auto cpos = line[i];
 			if(getStone(cpos) == Stone::None) {
 				values[cpos] +=
-					-log(1 - pow(ptr->next_value(astone, i), val_exp_lv))
-					-log(1 - pow(ptr->next_value(estone, i), val_exp_lv));
+					         val_ally_weight  * -log(1 - pow(ptr->next_value(astone, i), val_exp_lv))
+					+ (1.0 - val_ally_weight) * -log(1 - pow(ptr->next_value(estone, i), val_exp_lv));
 			}
 		}
 	});
 
+//	最大値をとる位置を求める
+
+	Pos max_pos;
+	StoneLine::Value max_value;
+	bool isfirst = true;
+
+	for(const auto& i : values) {
+		if(isfirst || max_value < i.second){
+			max_pos = i.first;
+			max_value = i.second;
+		}
+		isfirst = false;
+	}
+
+
 #ifdef _DEBUG
+	std::cout << "\n==== F19 Debug Information ====\n";
 	for(Y y = 0; y < Board::size; ++y) {
 		for(X x = 0; x < Board::size; ++x) {
 			Pos p(x, y);
@@ -84,7 +100,10 @@ void F19::Board::calc_next_values(Stone target) {
 		}
 		std::cout << "\n";
 	}
+	std::cout << "================================\n";
 #endif
+
+	return max_pos;
 
 };
 
@@ -160,3 +179,4 @@ std::ostream& F19::operator <<(std::ostream& os, const Board& board) {
 bool F19::Board::f_lines_generated = false;
 F19::Board::AllLines F19::Board::lines;
 int F19::Board::val_exp_lv = 1;
+double F19::Board::val_ally_weight = 0.5;

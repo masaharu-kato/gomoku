@@ -16,11 +16,16 @@ namespace F19 {
 
 		using Ptr = std::shared_ptr<Board>;
 
+		constexpr static CoordType size = 10;
+		using BoardArray = Stone[size][size];
+
+		Board() = default;
+
 	//	新しい盤面の作成
-		static Ptr create();
+	//	static Ptr create();
 
 	//	位置pに石stoneを置いた盤面を取得
-		Ptr getWith(Pos p, Stone stone) const;
+	//	Ptr getWith(Pos p, Stone stone) const;
 
 	//	位置 p にある石を取得
 		Stone getStone(Pos p) const;
@@ -40,8 +45,6 @@ namespace F19 {
 	//	縦・横・斜め全ての並びを処理する(位置と石の並び)
 		void forEachLines(std::function<void(const Line&, StoneLine::Ptr)>) const;
 
-		constexpr static CoordType size = 10;
-
 	//	すべての空いている位置について処理する
 		void forEachEmpties(std::function<void(Pos)>) const;
 		void forEachEmpties(std::function<void(X, Y)>) const;
@@ -49,13 +52,13 @@ namespace F19 {
 
 		friend std::istream& operator >>(std::istream& is, Board& board);
 
+		void setStone(X x, Y y, Stone stone);
+		void setStone(Pos p, Stone stone);
 
-		Board() = default;
-
-		void calc_next_values(Stone target);
-
+		Pos calcNextPosition(Stone target);
 		
 		static int val_exp_lv;
+		static double val_ally_weight;
 		
 
 	private:
@@ -64,12 +67,9 @@ namespace F19 {
 		constexpr static size_t Line_Length = 6 * size - 2;
 		using AllLines = std::array<Line, Line_Length>;
 
-		Stone board[size][size] = {Stone::None};
+		BoardArray board = {Stone::None};
 
 		Board(Ptr parent, Pos pos);
-
-		void setStone(X x, Y y, Stone stone);
-		void setStone(Pos p, Stone stone);
 
 		static Line getLine(X begx, Y begy, X invx, Y invy);
 		StoneLine::Ptr generateStoneLine(const Line& line) const;

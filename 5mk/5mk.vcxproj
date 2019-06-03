@@ -21,15 +21,18 @@
   <ItemGroup>
     <ClCompile Include="board.cpp" />
     <ClCompile Include="coord.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="gomoku_2019.cpp" />
     <ClCompile Include="Stone.cpp" />
     <ClCompile Include="StoneLine.cpp" />
+    <ClCompile Include="strategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
     <ClInclude Include="coord.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="Stone.h" />
     <ClInclude Include="StoneLine.h" />
+    <ClInclude Include="strategy.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\input01.txt" />
