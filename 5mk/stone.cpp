@@ -45,6 +45,18 @@ auto F19::Stone::reverse(Stone stone) -> F19::Stone {
 	throw std::exception("Invalid stone type.");
 }
 
+
+std::istream& F19::operator >>(std::istream& is, Stone& stone) {
+	char c;
+	is >> c;
+	stone = (Stone)c;
+	return is;
+}
+
+std::ostream& F19::operator <<(std::ostream& os, const Stone& stone) {
+	return os << stone.getChar();
+}
+
 //bool F19::Stone::isNone() const {
 //	return stone == None;
 //}

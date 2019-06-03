@@ -11,83 +11,65 @@ auto F19::StoneLine::value(Stone target) const -> Value {
 	if(cache) return *cache;
 
 	auto& nexts = _next_values[target.getID() - 1];
-	nexts.resize(10);
+	nexts.resize(size(), 0.0);
 
 //	std::cerr << "calc_value: " << (Base)*this << "|\n";
 
 	Stone astone = target;
 	Stone estone = Stone::reverse(target);
 
+//	評価値
+	Value value = 0;
+
 //	自分の石で5目を形成していれば 1, 相手の石で5目を形成していれば -1 を返す
-	if(is5mk(astone)) return 1;
-	if(is5mk(estone)) return -1;
+	if(is5mk(astone)){
+		value = 1;
+	}
+	else if(is5mk(estone)){
+		value = -1;
+	}
+	else{
 
-//	自分の石を置いた時の評価値の合計
-	Value sum_aval = 0;	
+	//	自分の石を置いた時の評価値の最大値
+		Value max_aval = 0;	
 
-//	相手の石を置いた時の最小値
-	Value max_eval = 0;
-//	Value sum_eval = 0;
+	//	相手の石を置いた時の評価値の合計値
+		Value sum_eval = 0;
 
-//	空いている位置の数カウンタ
-	size_t n_none = 0;
+	//	空いている位置の数カウンタ
+		size_t n_empty = 0;
 
-//	それぞれの自分の石を置いた時の評価
-	std::vector<Value> avals(size(), 0.0);
+		for(size_t i = 0; i < size(); i++) {
 
-	for(size_t i = 0; i < size(); i++) {
+		//	空いてる位置それぞれを処理
+			if(at(i) == Stone::None) {
 
-	//	空いてる位置それぞれを処理
-		if(at(i) == Stone::None) {
+			//	自分の石を置いた時の評価を計算
+				auto c_aval = getWith(i, astone)->value(astone);
+				nexts[i] = c_aval;
+				if(!n_empty || max_aval < c_aval) max_aval = c_aval;
 
-		//	自分の石を置いた時の評価を計算
-			auto c_aval = getWith(i, astone)->value(astone);
-			avals[i] = c_aval;
+			//	相手の石を置いた時の評価を計算し、最小値を更新
+				auto c_eval = getWith(i, estone)->value(astone);
+				sum_eval += c_eval;
 
-		//	自分の石を置いた時の評価を計算し、合計に加算
-			sum_aval += c_aval;
+				n_empty++;
+			}
 
-		//	相手の石を置いた時の評価を計算し、最小値を更新
-			auto c_eval = getWith(i, estone)->value(estone);
-			if(!n_none || max_eval < c_eval) max_eval = c_eval;
-		//	sum_eval += getWith(i, estone)->value(target);
-
-			n_none++;
+		}
+	
+	//	自分の石を置いた時の評価値の平均
+		if(n_empty) {
+			value = miss_coef * max_aval + (1.0 - miss_coef) * (sum_eval / n_empty);
 		}
 
 	}
 	
-//	自分の石を置いた時の評価値の平均
-
-//	評価値
-	Value value = n_none ? (sum_aval / n_none - max_eval) : 0;
-	
 //	評価値を保存
 	cache.reset(new Value(value));
 	
-	for(size_t i = 0; i < size(); i++) {
-		nexts[i] = - getWith(i, astone)->value(astone) + value;
-	}
-
 	return value;
 }
-//
-//
-////	すべての次の評価値を計算する関数
-//void F19::StoneLine::calc_next_values(Stone target) const {
-//	
-//	auto& values = _next_values[target.getID() - 1];
-//	values.resize(size());
-//
-//	for(size_t i = 0; i < size(); i++) {
-//		if(at(i) == Stone::None) {
-//			values[i] = getWith(i, target)->value(target) - value(Stone::reverse(target)) - value(target);
-//		}else{
-//			values[i] = 0;
-//		}
-//	}
-//
-//}
 
 
 auto F19::StoneLine::next_value(Stone target, Index index) const -> Value {
@@ -214,3 +196,4 @@ void F19::StoneLine::out_instances(std::ostream& os) {
 }
 
 F19::StoneLine::Map F19::StoneLine::instances;
+double F19::StoneLine::miss_coef = 0.5;

@@ -40,7 +40,7 @@ namespace F19 {
 		StoneType stone;
 	};
 
-	//std::istream& operator >>(std::istream& is, Stone& stone);
-	//std::ostream& operator <<(std::ostream& os, const Stone& stone);
+	std::istream& operator >>(std::istream& is, Stone& stone);
+	std::ostream& operator <<(std::ostream& os, const Stone& stone);
 
 }

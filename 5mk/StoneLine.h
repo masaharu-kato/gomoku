@@ -52,6 +52,9 @@ namespace F19 {
 	//	デバッグ用
 		static void out_instances(std::ostream& os);
 
+	//	無視係数
+		static double miss_coef;
+
 	private:
 		StoneLine(const Base&);
 

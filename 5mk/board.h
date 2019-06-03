@@ -53,6 +53,9 @@ namespace F19 {
 		Board() = default;
 
 		void calc_next_values(Stone target);
+
+		
+		static int val_exp_lv;
 		
 
 	private:

@@ -1,5 +1,6 @@
 #include "board.h"
 #include <algorithm>
+#include <cmath>
 
 auto F19::Board::getStone(X x, Y y) const -> Stone {
 	return board[x][y];
@@ -52,13 +53,17 @@ void F19::Board::calc_next_values(Stone target) {
 
 	PosValueMap values;
 
+	Stone astone = target;
+	Stone estone = Stone::reverse(target);
+
 //	‘S‚Ä‚Ì•À‚Ñ‚Ì—P—\’l‚ð’²‚×‚é
 	forEachLines([&](const Line& line, StoneLine::Ptr ptr){
 		for(size_t i = 0; i < line.size(); i++) {
 			auto cpos = line[i];
 			if(getStone(cpos) == Stone::None) {
-				auto cval = ptr->next_value(target, i);
-				if(values[cpos] < cval) values[cpos] = cval;
+				values[cpos] +=
+					-log(1 - pow(ptr->next_value(astone, i), val_exp_lv))
+					-log(1 - pow(ptr->next_value(estone, i), val_exp_lv));
 			}
 		}
 	});
@@ -68,11 +73,13 @@ void F19::Board::calc_next_values(Stone target) {
 		for(X x = 0; x < Board::size; ++x) {
 			Pos p(x, y);
 			if(values.count(p)){
-				printf("%+7.4f ", values[p]);
+				auto cval = values[p];
+				if(std::isinf(cval)) cval = 99.999999;
+				printf("%+10.6f ", cval);
 			}else{
 				auto cstone = getStone(p);
 			//	if(cstone == Stone::None) throw std::exception("None stone is impossible here.");
-				std::cout << "  [" << cstone.getChar() << "]   ";
+				std::cout << "    [" << cstone.getChar() << "]    ";
 			}
 		}
 		std::cout << "\n";
@@ -130,6 +137,7 @@ std::istream& F19::operator >>(std::istream& is, Board& board) {
 	for(Y y = 0; y < Board::size; ++y) {
 		std::string str;
 		is >> str;
+		if(!str.length()) continue;
 		if(str.length() < Board::size) throw std::exception("Invalid input length.");
 		for(X x = 0; x < Board::size; ++x) {
 			board.setStone(x, y, Stone(str[x]));
@@ -151,3 +159,4 @@ std::ostream& F19::operator <<(std::ostream& os, const Board& board) {
 
 bool F19::Board::f_lines_generated = false;
 F19::Board::AllLines F19::Board::lines;
+int F19::Board::val_exp_lv = 1;
