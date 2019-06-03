@@ -36,12 +36,12 @@ auto F19::Board::getLine(X begx, Y begy, X invx, Y invy) -> Line {
 void F19::Board::generateLines() {
 
 	size_t i = 0;
-	for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, 0, 1);
+	//for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, 0, 1);
 	for(Y y = 0; y < size; ++y) lines[i++] = getLine(0, y, 1, 0);
-	for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, 1, 1);
-	for(Y y = 1; y < size; ++y) lines[i++] = getLine(0, y, 1, 1);
-	for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, -1, 1);
-	for(Y y = 1; y < size; ++y) lines[i++] = getLine(size - 1, y, -1, 1);
+	//for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, 1, 1);
+	//for(Y y = 1; y < size; ++y) lines[i++] = getLine(0, y, 1, 1);
+	//for(X x = 0; x < size; ++x) lines[i++] = getLine(x, 0, -1, 1);
+	//for(Y y = 1; y < size; ++y) lines[i++] = getLine(size - 1, y, -1, 1);
 
 	f_lines_generated = true;
 	
@@ -57,8 +57,7 @@ void F19::Board::calc_next_values(Stone target) {
 		for(size_t i = 0; i < line.size(); i++) {
 			auto cpos = line[i];
 			if(getStone(cpos) == Stone::None) {
-				auto cvalue = ptr->grace_steps(target, i);
-				values[cpos] += Value(10000.0 / (cvalue * 10 + 1));
+				values[cpos] += ptr->next_value(target, i);
 			}
 		}
 	});
@@ -68,7 +67,7 @@ void F19::Board::calc_next_values(Stone target) {
 		for(X x = 0; x < Board::size; ++x) {
 			Pos p(x, y);
 			if(values.count(p)){
-				printf("%+7d ", values[p]);
+				printf("%+7.4f ", values[p]);
 			}else{
 				auto cstone = getStone(p);
 			//	if(cstone == Stone::None) throw std::exception("None stone is impossible here.");

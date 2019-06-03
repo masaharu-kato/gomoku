@@ -5,87 +5,97 @@ F19::StoneLine::StoneLine(const Base& base) : Base(base) {
 
 }
 
-auto F19::StoneLine::calc_win_steps(Stone target) const -> Steps {
-
-	if(is5mk(target)) return 0;
-
-	Steps min_steps = Steps_Infinity;
-
-	for(size_t i = 0; i < size(); i++) {
-		if(at(i) == Stone::None) {
-			auto c_steps = getWith(i, target)->win_steps(target) + 1;
-			if(min_steps > c_steps) min_steps = c_steps;
-		}
-	}
-
-	return min_steps;
-
-}
-
-auto F19::StoneLine::calc_blocked_steps(Stone target) const -> Steps {
-
-	if(win_steps(target) == Steps_Infinity) return 0;
-
-	Steps min_steps = Steps_Infinity;
-	auto rev_target = Stone::reverse(target);
-
-	for(size_t i = 0; i < size(); i++) {
-		if(at(i) == Stone::None) {
-			auto c_steps = getWith(i, rev_target)->blocked_steps(target) + 1;
-			if(min_steps > c_steps) min_steps = c_steps;
-		}
-	}
-
-	return min_steps;
-
-}
-
-
-//	各位置における grace_steps を計算する関数
-void F19::StoneLine::calc_grace_steps(Stone target) const {
+auto F19::StoneLine::value(Stone target) const -> Value {
 	
-	auto& graces = _grace_steps[target.getID() - 1];
-	graces.resize(size());
+	auto& cache = _value[target.getID() - 1];
+	if(cache) return *cache;
+
+	auto& nexts = _next_values[target.getID() - 1];
+	nexts.resize(10);
+
+//	std::cerr << "calc_value: " << (Base)*this << "|\n";
+
+	Stone astone = target;
+	Stone estone = Stone::reverse(target);
+
+//	自分の石で5目を形成していれば 1, 相手の石で5目を形成していれば -1 を返す
+	if(is5mk(astone)) return 1;
+	if(is5mk(estone)) return -1;
+
+//	自分の石を置いた時の評価値の合計
+	Value sum_aval = 0;	
+
+//	相手の石を置いた時の最小値
+	Value max_eval = 0;
+//	Value sum_eval = 0;
+
+//	空いている位置の数カウンタ
+	size_t n_none = 0;
+
+//	それぞれの自分の石を置いた時の評価
+	std::vector<Value> avals(size(), 0.0);
 
 	for(size_t i = 0; i < size(); i++) {
+
+	//	空いてる位置それぞれを処理
 		if(at(i) == Stone::None) {
-			graces[i] = getWith(i, target)->grace_steps(target);
-		}else{
-			graces[i] = 0;
+
+		//	自分の石を置いた時の評価を計算
+			auto c_aval = getWith(i, astone)->value(astone);
+			avals[i] = c_aval;
+
+		//	自分の石を置いた時の評価を計算し、合計に加算
+			sum_aval += c_aval;
+
+		//	相手の石を置いた時の評価を計算し、最小値を更新
+			auto c_eval = getWith(i, estone)->value(estone);
+			if(!n_none || max_eval < c_eval) max_eval = c_eval;
+		//	sum_eval += getWith(i, estone)->value(target);
+
+			n_none++;
 		}
+
+	}
+	
+//	自分の石を置いた時の評価値の平均
+
+//	評価値
+	Value value = n_none ? (sum_aval / n_none - max_eval) : 0;
+	
+//	評価値を保存
+	cache.reset(new Value(value));
+	
+	for(size_t i = 0; i < size(); i++) {
+		nexts[i] = - getWith(i, astone)->value(astone) + value;
 	}
 
+	return value;
+}
+//
+//
+////	すべての次の評価値を計算する関数
+//void F19::StoneLine::calc_next_values(Stone target) const {
+//	
+//	auto& values = _next_values[target.getID() - 1];
+//	values.resize(size());
+//
+//	for(size_t i = 0; i < size(); i++) {
+//		if(at(i) == Stone::None) {
+//			values[i] = getWith(i, target)->value(target) - value(Stone::reverse(target)) - value(target);
+//		}else{
+//			values[i] = 0;
+//		}
+//	}
+//
+//}
+
+
+auto F19::StoneLine::next_value(Stone target, Index index) const -> Value {
+	auto& values = _next_values[target.getID() - 1];
+	if(!values.size()) value(target);
+	return values[index];
 }
 
-
-
-
-auto F19::StoneLine::win_steps(Stone target) const -> Steps {
-	size_t index = target.getID() - 1;
-	if(!_win_steps[index]){
-		_win_steps[index].reset(new Steps(calc_win_steps(target)));
-	}
-	return *_win_steps[index];
-}
-
-auto F19::StoneLine::blocked_steps(Stone target) const -> Steps {
-	size_t index = target.getID() - 1;
-	if(!_blocked_steps[index]){
-		_blocked_steps[index].reset(new Steps(calc_blocked_steps(target)));
-	}
-	return *_blocked_steps[index];
-}
-
-auto F19::StoneLine::grace_steps(Stone target) const -> Steps {
-	auto rev_target = Stone::reverse(target);
-	return win_steps(rev_target) - blocked_steps(rev_target);
-}
-
-auto F19::StoneLine::grace_steps(Stone target, size_t index) const -> Steps {
-	size_t target_index = target.getID() - 1;
-	if(!_grace_steps[target_index].size()) calc_grace_steps(target);
-	return _grace_steps[target_index][index];
-}
 
 bool F19::StoneLine::operator==(const StoneLine& _line) const {
 
@@ -132,7 +142,7 @@ bool F19::StoneLine::is5mk(Stone target) const{
 	return false;
 }
 
-auto F19::StoneLine::getWith(size_t index, Stone stone) const -> Ptr {
+auto F19::StoneLine::getWith(Index index, Stone stone) const -> Ptr {
 
 	if(index >= size()) throw std::exception("Index out of range.");
 
@@ -177,7 +187,7 @@ std::istream& F19::operator >>(std::istream& is, StoneLine& stone_line) {
 
 std::ostream& F19::operator <<(std::ostream& os, const StoneLine& stone_line) {
 	for(auto stone : stone_line) {
-		std::cout << stone.getChar();
+		os << stone.getChar();
 	}
 	return os;
 }
@@ -197,35 +207,10 @@ size_t F19::StoneLine::Hash::operator ()(const Base& stone_line) const {
 void F19::StoneLine::out_instances(std::ostream& os) {
 	for(const auto& i : StoneLine::instances) {
 		std::cout << i.first
-			<< "\tBw:" << i.second->win_steps    (Stone::Black)
-			<< "\tBb:" << i.second->blocked_steps(Stone::Black)
-			<< "\tWw:" << i.second->win_steps    (Stone::White)
-			<< "\tWb:" << i.second->blocked_steps(Stone::White);
-
-		std::cout << "\t Bg: ";
-		i.second->out_graces(Stone::Black);
-		
-		std::cout << "\t Wg: ";
-		i.second->out_graces(Stone::White);
-
-		std::cout << "\n";
+			<< "\tB:" << i.second->value(Stone::Black)
+			<< "\tW:" << i.second->value(Stone::White)
+			<< "\n";
 	}
 }
-
-void F19::StoneLine::out_graces(Stone target) const {
-	
-	for(size_t i = 0; i < size(); i++) {
-		auto cstep = grace_steps(target, i);
-		if(cstep == Steps_Infinity) {
-			std::cout << "#";
-		}else if(cstep < 0){
-			std::cout << "-";
-		}else{
-			std::cout << cstep;
-		}
-	}
-
-}
-
 
 F19::StoneLine::Map F19::StoneLine::instances;

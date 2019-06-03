@@ -15,7 +15,6 @@ namespace F19 {
 	public:
 
 		using Ptr = std::shared_ptr<Board>;
-		using Value = int;
 
 	//	êVÇµÇ¢î’ñ ÇÃçÏê¨
 		static Ptr create();
@@ -57,7 +56,7 @@ namespace F19 {
 		
 
 	private:
-		using PosValueMap = std::unordered_map<Pos, Value, Pos::Hash>;
+		using PosValueMap = std::unordered_map<Pos, StoneLine::Value, Pos::Hash>;
 
 		constexpr static size_t Line_Length = 6 * size - 2;
 		using AllLines = std::array<Line, Line_Length>;
@@ -75,7 +74,6 @@ namespace F19 {
 
 		Ptr parent;
 		Stone last_stone;
-		Value current_value;
 		
 		static bool f_lines_generated;
 		static AllLines lines;

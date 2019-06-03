@@ -24,29 +24,26 @@ namespace F19 {
 	//	このクラスのインスタンスを保持するためのマップ
 		using Map = std::unordered_map<Base, Ptr, Hash>;
 
-		using Steps = int;
-		constexpr static Steps Steps_Infinity = 99; // = std::numeric_limits<Steps>::max();
+		using Index = size_t;
+		using Value = double;
 
 		static Map instances;
 		static Ptr instance(const Base&);
 
-		Ptr getWith(size_t index, Stone stone) const;
+		Ptr getWith(Index index, Stone stone) const;
 		Ptr getReversed() const;
 
 	//	targetの石が5目(5連続)を形成しているかどうか
 		bool is5mk(Stone target) const;
 
-	//	targetの石が勝利するまでの最小ステップ数
-		Steps win_steps(Stone target) const;
+	//	targetの石の評価値
+		Value value(Stone target) const;
 
-	//	targetの石の勝利が阻止される(targetの石が5目を作れなくなる)までの最小ステップ数
-		Steps blocked_steps(Stone target) const;
-		
-	//	猶予ステップ数
-		Steps grace_steps(Stone target) const;
+	//	targetの石を位置indexに置いた時の評価値
+		Value next_value(Stone target, Index index) const;
 
-	//	各位置の猶予ステップ数(その位置にtargetの石を置いた時の猶予ステップ数)
-		Steps grace_steps(Stone target, size_t index) const;
+	////	targetの石を位置indexに置いた時の評価値から現在の評価値を引いた値
+	//	Value next_value_diff(Stone target, Index index) const;
 
 	//	等価比較(ハッシュマップで利用)
 		bool operator==(const StoneLine&) const;
@@ -58,22 +55,11 @@ namespace F19 {
 	private:
 		StoneLine(const Base&);
 
-	//	win_steps を計算する関数
-		Steps calc_win_steps(Stone target) const;
+	//	すべての次の評価値を計算する関数
+	//	void calc_next_values(Stone target) const;
 
-	//	blocked_steps を計算する関数
-		Steps calc_blocked_steps(Stone target) const;
-
-	//	各位置における grace_steps を計算する関数
-		void calc_grace_steps(Stone target) const;
-
-
-		void out_graces(Stone target) const;
-
-
-		mutable std::unique_ptr<Steps> _win_steps[2];
-		mutable std::unique_ptr<Steps> _blocked_steps[2];
-		mutable std::vector<Steps> _grace_steps[2];
+		mutable std::unique_ptr<Value> _value[2];
+		mutable std::vector<Value> _next_values[2];
 
 	};
 		
