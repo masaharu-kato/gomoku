@@ -4,6 +4,7 @@
 
 namespace F19 {
 
+//	í—ªŠÖ”
 void strategy(const int board_array[][BOARD_SIZE], int *pos_x, int *pos_y, const int count, const position *history);
 
 }

@@ -1,8 +1,10 @@
 #pragma once
 namespace F19 {
 	
+//	座標を表現する型
 	using CoordType = __int32;
 
+//	X座標
 	class X {
 	public:
 		X();
@@ -23,6 +25,7 @@ namespace F19 {
 		CoordType c;
 	};
 	
+//	Y座標
 	class Y {
 	public:
 		Y();
@@ -43,8 +46,10 @@ namespace F19 {
 		CoordType c;
 	};
 
+//	位置型
 	class Pos {
 	public:
+	//	ハッシュ関数クラス
 		struct Hash;
 
 		Pos();
@@ -53,13 +58,14 @@ namespace F19 {
 		bool operator ==(const Pos& pos) const;
 		bool operator !=(const Pos& pos) const;
 
-		X x;
-		Y y;
+		X x;	//	X座標
+		Y y;	//	Y座標
 	};
 	
-//	ハッシュ関数
+//	ハッシュ関数クラス
 	struct Pos::Hash {
 		using result_type = __int64;
+	//	ハッシュ関数
 		__int64 operator()(const Pos& pos) const;
 	};
 

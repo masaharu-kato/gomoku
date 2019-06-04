@@ -1,6 +1,10 @@
 #include "board.h"
 #include <algorithm>
 #include <cmath>
+#include <string>
+#include <stdexcept>
+
+F19::Board::Board() = default;
 
 auto F19::Board::getStone(X x, Y y) const -> Stone {
 	return board[x][y];
@@ -54,7 +58,7 @@ auto F19::Board::calcNextPosition(Stone target) -> Pos {
 	PosValueMap values;
 
 	Stone astone = target;
-	Stone estone = Stone::reverse(target);
+	Stone estone = target.getReversed();
 
 //	‘S‚Ä‚ÌˆÊ’u‚Ì•]‰¿’l‚ðŒvŽZ‚·‚é
 	forEachLines([&](const Line& line, StoneLine::Ptr ptr){
@@ -82,6 +86,8 @@ auto F19::Board::calcNextPosition(Stone target) -> Pos {
 		isfirst = false;
 	}
 
+	if(isfirst) throw std::exception("No empty positions.");
+
 
 #ifdef _DEBUG
 	std::cout << "\n==== F19 Debug Information ====\n";
@@ -95,7 +101,7 @@ auto F19::Board::calcNextPosition(Stone target) -> Pos {
 			}else{
 				auto cstone = getStone(p);
 			//	if(cstone == Stone::None) throw std::exception("None stone is impossible here.");
-				std::cout << "    [" << cstone.getChar() << "]    ";
+				std::cout << "    [" << cstone << "]    ";
 			}
 		}
 		std::cout << "\n";
@@ -118,21 +124,21 @@ void F19::Board::setStone(Pos p, Stone stone) {
 	return setStone(p.x, p.y, stone);
 }
 
-void F19::Board::forEachEmpties(std::function<void(Pos)> func) const {
-	for(Y y = 0; y < Board::size; ++y) {
-		for(X x = 0; x < Board::size; ++x) {
-			if(getStone(x, y) == Stone::None) func({x, y});
-		}
-	}
-}
-
-void F19::Board::forEachEmpties(std::function<void(X, Y)> func) const {
-	for(Y y = 0; y < Board::size; ++y) {
-		for(X x = 0; x < Board::size; ++x) {
-			if(getStone(x, y) == Stone::None) func(x, y);
-		}
-	}
-}
+//void F19::Board::forEachEmpties(std::function<void(Pos)> func) const {
+//	for(Y y = 0; y < Board::size; ++y) {
+//		for(X x = 0; x < Board::size; ++x) {
+//			if(getStone(x, y) == Stone::None) func({x, y});
+//		}
+//	}
+//}
+//
+//void F19::Board::forEachEmpties(std::function<void(X, Y)> func) const {
+//	for(Y y = 0; y < Board::size; ++y) {
+//		for(X x = 0; x < Board::size; ++x) {
+//			if(getStone(x, y) == Stone::None) func(x, y);
+//		}
+//	}
+//}
 
 void F19::Board::forEachLines(std::function<void(const Line&, StoneLine::Ptr)> func) const {
 
@@ -156,8 +162,8 @@ std::istream& F19::operator >>(std::istream& is, Board& board) {
 	for(Y y = 0; y < Board::size; ++y) {
 		std::string str;
 		is >> str;
-		if(!str.length()) continue;
-		if(str.length() < Board::size) throw std::exception("Invalid input length.");
+		if(!y && !str.length()) continue;
+		if(str.length() != Board::size) throw std::exception("Invalid input length.");
 		for(X x = 0; x < Board::size; ++x) {
 			board.setStone(x, y, Stone(str[x]));
 		}
@@ -169,14 +175,24 @@ std::istream& F19::operator >>(std::istream& is, Board& board) {
 std::ostream& F19::operator <<(std::ostream& os, const Board& board) {
 	for(Y y = 0; y < Board::size; ++y) {
 		for(X x = 0; x < Board::size; ++x) {
-			os << board.getStone(x, y).getChar();
+			os << board.getStone(x, y);
 		}
 		os << "\n";
 	}
 	return os;
 }
 
-bool F19::Board::f_lines_generated = false;
-F19::Board::AllLines F19::Board::lines;
+
+//	static •Ï”‚Ì‰Šú‰»
+
+//	•]‰¿’l‚Ì—ÝæŒW”
 int F19::Board::val_exp_lv = 1;
+
+//	•]‰¿’l‚ÌŽ©•ª‚Ì•]‰¿’l‚Ìd‚ÝŒW”
 double F19::Board::val_ally_weight = 0.5;
+
+//	”Õ–Ê‚Ì‚·‚×‚Ä‚Ì—ñ‚ð¶¬‚µ‚½‚©‚Ç‚¤‚©
+bool F19::Board::f_lines_generated = false;
+
+//	”Õ–Ê‚Ì‚·‚×‚Ä‚Ì—ñ
+F19::Board::AllLines F19::Board::lines;

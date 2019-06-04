@@ -6,6 +6,6 @@
 #define STONE_WHITE 2      // ”Õ–Ê‚É‚ ‚éÎ ”’
 	
 typedef struct{
-int x;
-int y;
+	int x;
+	int y;
 } position;
