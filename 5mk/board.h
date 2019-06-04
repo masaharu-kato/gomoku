@@ -1,89 +1,93 @@
-#include "base.h"
-#include "stone.h"
-#include "position.h"
-#include <vector>
+#pragma once
+#include "StoneLine.h"
+#include "coord.h"
 #include <memory>
+#include <unordered_map>
 #include <functional>
+#include <vector>
+#include <array>
 
-namespace Kato {
-
-	class Board;
-	using BoardPtr = std::shared_ptr<Board>;
+namespace F19 {
+	
+	using Line = std::vector<Pos>;
 
 	class Board {
-		using Data = Stone::Kind**;
-		using History = std::vector<Position>;
-		using Count = int;
-		constexpr static int Size = BOARD_SIZE;
-		constexpr static int SizeX = Size;
-		constexpr static int SizeY = Size;
-
-		Data data;
-		History history;
-		Count count;
-
-		
-
-	/*
-		struct Data {
-			Position p;
-			Stone::Kind kind;
-			Stone::Series series;
-
-			Data(const Position& p, Stone::Kind kind) : p(p), kind(kind) {}
-		};
-
-		std::vector<Data> series_list;
-
-	//	ある位置に関して処理を行う
-		void calcOn(const Position& pos);
-
-	//	位置と方向を指定して連続数を計算
-		void calcSeries(Stone::Series::Dir&, Position pos, Direction dir);
-
-	//	位置の全方向の連続数を計算
-		void calcSeries(const Position& pos);
-	*/
-
-	//	位置が範囲内か返す
-		bool isInside(const Position& pos) const;
-
-	//	データ上の指定した位置に石を置く(履歴, 手番のカウントは行わない)
-		Stone::Kind setStone(const Position& pos);
-
 	public:
 
-		Board() {};
+		using Ptr = std::shared_ptr<Board>;
 
-	//	指定位置の石の種類を返す　範囲外なら-1
-		Stone::Kind getStone(const Position&) const;
+		constexpr static CoordType size = 10;
+		using BoardArray = Stone[size][size];
 
-	//	指定位置に任意の色の石を置く
-		Stone::Kind putStone(const Position&, Stone::Kind&);
+		Board() = default;
 
-		const History& getHistory() const {
-			return history;
-		}
+	//	新しい盤面の作成
+	//	static Ptr create();
 
-	//	n番目に置いた石の色を取得 (初手を 0 とする)
-		Position getHistory(Count) const;
+	//	位置pに石stoneを置いた盤面を取得
+	//	Ptr getWith(Pos p, Stone stone) const;
 
-	//	最後からn番目に置いた石の色を取得 (一つ前の手を 1 とする)
-		Position getLastHistory(Count) const;
+	//	位置 p にある石を取得
+		Stone getStone(Pos p) const;
 
-	//	現在何手目であるか取得する
-		Count getCount() const;
+	//	位置 (x, y) にある石を取得
+		Stone getStone(X x, Y y) const;
 
-	//	現在のターンを取得する
-		Stone::Kind getKind() const;
+	//	位置 p が盤面内か調べる(静的)
+		static bool isInside(Pos p);
+
+	//	位置 (x, y) が盤面内か調べる(静的)
+		static bool isInside(X x, Y y);
+
+	////	縦・横・斜め全ての並びを処理する(石の並びのみ)
+	//	void forEachLines(std::function<void(StoneLine::Ptr)>) const;
 		
-	//	盤面上のすべての位置に関して処理を行う
-		void doEach(std::function<void(const Position&)>) const;
-		void doEach(std::function<void(const Position&, Stone::Kind)>) const;
-		void doEach(std::function<void(const Position&, Stone::Kind&)>);
-		void doEachEmpty(std::function<void(const Position&)>) const;
-		Stone::Kind& operator [](const Position&);
+	//	縦・横・斜め全ての並びを処理する(位置と石の並び)
+		void forEachLines(std::function<void(const Line&, StoneLine::Ptr)>) const;
+
+	//	すべての空いている位置について処理する
+		void forEachEmpties(std::function<void(Pos)>) const;
+		void forEachEmpties(std::function<void(X, Y)>) const;
+		
+
+		friend std::istream& operator >>(std::istream& is, Board& board);
+
+		void setStone(X x, Y y, Stone stone);
+		void setStone(Pos p, Stone stone);
+
+		Pos calcNextPosition(Stone target);
+		
+		static int val_exp_lv;
+		static double val_ally_weight;
+		
+
+	private:
+		using PosValueMap = std::unordered_map<Pos, StoneLine::Value, Pos::Hash>;
+
+		constexpr static size_t Line_Length = 6 * size - 2;
+		using AllLines = std::array<Line, Line_Length>;
+
+		BoardArray board = {Stone::None};
+
+		Board(Ptr parent, Pos pos);
+
+		static Line getLine(X begx, Y begy, X invx, Y invy);
+		StoneLine::Ptr generateStoneLine(const Line& line) const;
+		static void generateLines();
+
+		Ptr parent;
+		Stone last_stone;
+		
+		static bool f_lines_generated;
+		static AllLines lines;
+
 
 	};
+	
+//	入力関数
+	std::istream& operator >>(std::istream& is, Board& board);
+
+//	出力関数
+	std::ostream& operator <<(std::ostream& os, const Board& board);
 
 }

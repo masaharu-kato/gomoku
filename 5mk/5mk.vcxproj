@@ -18,36 +18,55 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="board.cpp" />
+    <ClCompile Include="coord.cpp" />
+    <ClCompile Include="gomoku_2019.cpp" />
+    <ClCompile Include="Stone.cpp" />
+    <ClCompile Include="StoneLine.cpp" />
+    <ClCompile Include="strategy.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="board.h" />
+    <ClInclude Include="coord.h" />
+    <ClInclude Include="define.h" />
+    <ClInclude Include="Stone.h" />
+    <ClInclude Include="StoneLine.h" />
+    <ClInclude Include="strategy.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\input01.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{2CB53B08-14D7-4750-B298-82A14C4D66C5}</ProjectGuid>
     <RootNamespace>My5mk</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -118,39 +137,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="battle.cpp" />
-    <ClCompile Include="board.cpp" />
-    <ClCompile Include="group1.cpp" />
-    <ClCompile Include="group10.cpp" />
-    <ClCompile Include="group11.cpp" />
-    <ClCompile Include="group12.cpp" />
-    <ClCompile Include="group14.cpp" />
-    <ClCompile Include="group15.cpp" />
-    <ClCompile Include="group2.cpp" />
-    <ClCompile Include="group3.cpp" />
-    <ClCompile Include="group4.cpp" />
-    <ClCompile Include="group5.cpp" />
-    <ClCompile Include="group6.cpp" />
-    <ClCompile Include="group7.cpp" />
-    <ClCompile Include="group8.cpp" />
-    <ClCompile Include="group9.cpp" />
-    <ClCompile Include="pattern.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="input_pos.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="base.h" />
-    <ClInclude Include="board.h" />
-    <ClInclude Include="core.h" />
-    <ClInclude Include="directions.h" />
-    <ClInclude Include="groups.h" />
-    <ClInclude Include="pattern.h" />
-    <ClInclude Include="position_map.h" />
-    <ClInclude Include="position.h" />
-    <ClInclude Include="stone.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

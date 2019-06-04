@@ -1,26 +1,46 @@
 #pragma once
-#include "base.h"
+#include <iostream>
+#include <stdexcept>
 
-namespace Kato {
+namespace F19 {
 
-	class Stone {
+	class Stone{
 	public:
-		
-	//	石の種類 0なら無し、'W'なら白、'B'なら黒、-1なら壁
-		using Kind = char;
+		enum StoneType : char {
+			None  = 0,
+			Black = 1,
+			White = 2,
+		};
 
-	//	石の相対的種類 0なら無し、1なら自分の色, -1なら相手の色または壁
-		using RelKind = char;
+		enum class StoneChar : char {
+			None  = '.',
+			Black = 'X',
+			White = 'O',
+		};
 
-		using Number = int;
+		Stone();
+		Stone(StoneType stone);
+		explicit Stone(char c);
 
-	//	連続個数
-		class Series;
+		size_t getID() const;
+		char getChar() const;
 
-	//	Seriesの集合
-		class SeriesMap;
+		//bool isNone() const;
+		//bool isBlack() const;
+		//bool isWhite() const;
+		//bool isNoneOrBlack() const;
+		//bool isNoneOrWhite() const;
 
+		bool operator ==(Stone stone) const;
+		bool operator !=(Stone stone) const;
 
+		static Stone reverse(Stone stone);
+
+	private:
+		StoneType stone;
 	};
 
-};
+	std::istream& operator >>(std::istream& is, Stone& stone);
+	std::ostream& operator <<(std::ostream& os, const Stone& stone);
+
+}

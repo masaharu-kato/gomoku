@@ -1,38 +1,34 @@
-#include "core.h"
-#include "groups.h"
+#include "board.h"
+#include <iostream>
 
-//=======================================================
-// main
-//=======================================================
-int main( int argc, char **argv )
-{
-	int group[2] = {0, 0};
+using namespace F19;
 
-	if(argc == 3) {
-		group[0] = atoi( argv[1] );
-		group[1] = atoi( argv[2] );
+int main(void) {
+
+	Stone stone;
+	size_t n_board;
+	decltype(StoneLine::miss_coef) miss_coef;
+	decltype(Board::val_exp_lv) val_exp_lv;
+
+	std::cin >> n_board >> stone >> miss_coef >> val_exp_lv;
+
+	StoneLine::miss_coef = miss_coef;
+	Board::val_exp_lv = val_exp_lv;
+	
+	std::cout << "miss_coef: " << StoneLine::miss_coef
+		<< ", val_exp_lv: " << Board::val_exp_lv << "\n";
+
+	for(size_t i = 1; i <= n_board; i++) {
+
+		Board board;
+		std::cin >> board;
+	
+		std::cout << stone << i << "\n";
+		board.calc_next_values(stone);
+
+		stone = Stone::reverse(stone);
+
 	}
-
-	while(true) {
-
-		printf("============================================================\n");
-
-		if(!group[0]){
-			printf("先攻のグループ番号："); scanf("%d", &group[0]);
-			if(!group[0]) break;
-		}
-
-		if(!group[1]){
-			printf("後攻のグループ番号："); scanf("%d", &group[1]);
-			if(!group[1]) break;
-		}
-
-		battle(group);
-
-		group[0] = 0;
-		group[1] = 0;
-	}
-
-	system("pause");
-    return 0;
+	
+	return 0;
 }
